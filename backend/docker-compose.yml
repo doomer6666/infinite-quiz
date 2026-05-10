@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  db:
+    image: mongo:latest
+    restart: always
+    container_name: infinite-quiz_mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: test
+      MONGO_INITDB_DATABASE: infinite-quiz
+    ports:
+      - "127.0.0.3:27019:27017"
+    volumes:
+      - infinite-quiz_data:/data/db
+
+  db_ui:
+    image: mongo-express:latest
+    restart: always
+    container_name: infinite-quiz_mongo_express
+    ports:
+      - 8090:8090
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: test
+      ME_CONFIG_MONGODB_URL: mongodb://admin:test@db:27017/
+    depends_on:
+      - db 
+volumes:
+  infinite-quiz_data:

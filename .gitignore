@@ -1,0 +1,12 @@
+.idea
+checks/dist
+backend/dist
+frontend/dist
+common/dist
+node_modules
+*-report.txt
+*-report.json
+coverage
+.vscode
+backend/.env
+*.log
