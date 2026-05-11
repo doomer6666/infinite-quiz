@@ -11,6 +11,7 @@ export type MainShema = {
   DB_PASSWORD: string;
   DB_PORT: string;
   DB_NAME: string;
+  JWT_SECRET: string;
 };
 
 export const configShema = convict<MainShema>({
@@ -55,5 +56,11 @@ export const configShema = convict<MainShema>({
     format: "port",
     env: "DB_PORT",
     default: "27017",
+  },
+  JWT_SECRET: {
+    doc: "Secret for sign JWT",
+    format: String,
+    env: "JWT_SECRET",
+    default: null,
   },
 });

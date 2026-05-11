@@ -9,4 +9,5 @@ export const Component = {
   QuizService: Symbol.for("QuizService"),
   UserController: Symbol.for("UserController"),
   QuizController: Symbol.for("QuizController"),
+  AuthService: Symbol.for("AuthService"),
 } as const;

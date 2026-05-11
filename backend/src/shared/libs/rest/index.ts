@@ -5,3 +5,6 @@ export * from "./types/request.params.type.js";
 export * from "./controller/base-controller.abstract.js";
 export * from "./controller/controller.interface.js";
 export * from "./errors/index.js";
+export * from "./middleware/private-route.middleware.js";
+export * from "./middleware/validate-dto.middleware.js";
+export * from "./middleware/parse-token.middleware.js";

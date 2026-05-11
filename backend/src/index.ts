@@ -9,11 +9,13 @@ import {
 } from "./app/index.js";
 import { Component } from "./shared/types/conponent.js";
 import { createUserContainer } from "./modules/user/index.js";
+import { createAuthContainer } from "./modules/auth/auth.container.js";
 
 async function bootstrap() {
   const appContainer = new Container();
   appContainer.load(createMainApplicationContainer());
   appContainer.load(createUserContainer());
+  appContainer.load(createAuthContainer());
   // appContainer.load(createQuizContainer());
   const app = appContainer.get<MainApplication>(Component.MainApplication);
   await app.init();

@@ -6,7 +6,10 @@ import { IDatabaseClient } from "../shared/database-client/index.js";
 import { getMongoURI } from "../shared/utils/index.js";
 import { IUserService } from "../modules/user/user-service.interface.js";
 import { ILogger } from "../shared/libs/logger/index.js";
-import { IController } from "../shared/libs/rest/index.js";
+import {
+  IController,
+  ParseTokenMiddleware,
+} from "../shared/libs/rest/index.js";
 
 @injectable()
 export class MainApplication {
@@ -69,6 +72,10 @@ export class MainApplication {
   }
 
   private async _initMiddleware() {
+    const parseTokenMiddleware = new ParseTokenMiddleware(
+      this.config.get("JWT_SECRET"),
+    );
     this.server.use(express.json());
+    this.server.use(parseTokenMiddleware.execute.bind(parseTokenMiddleware));
   }
 }
