@@ -2,6 +2,7 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import { initSocket } from "./sockets/index.js";
+import "reflect-metadata";
 import { Container } from "inversify";
 import {
   createMainApplicationContainer,
@@ -9,14 +10,15 @@ import {
 } from "./app/index.js";
 import { Component } from "./shared/types/conponent.js";
 import { createUserContainer } from "./modules/user/index.js";
-import { createAuthContainer } from "./modules/auth/auth.container.js";
+import { createAuthContainer } from "./modules/auth/index.js";
+import { CreateQuizContainer } from "./modules/quiz/index.js";
 
 async function bootstrap() {
   const appContainer = new Container();
   appContainer.load(createMainApplicationContainer());
   appContainer.load(createUserContainer());
   appContainer.load(createAuthContainer());
-  // appContainer.load(createQuizContainer());
+  appContainer.load(CreateQuizContainer());
   const app = appContainer.get<MainApplication>(Component.MainApplication);
   await app.init();
 }

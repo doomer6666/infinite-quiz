@@ -22,6 +22,8 @@ export class MainApplication {
     private readonly databaseClient: IDatabaseClient,
     @inject(Component.UserController)
     private readonly userController: IController,
+    @inject(Component.QuizController)
+    private readonly quizController: IController,
   ) {
     this.server = express();
   }
@@ -69,6 +71,7 @@ export class MainApplication {
 
   private async _intiControllers() {
     this.server.use("/users", this.userController.router);
+    this.server.use("/quizzes", this.quizController.router);
   }
 
   private async _initMiddleware() {

@@ -21,7 +21,7 @@ export class DefaultQuizService implements IQuizService {
   }
 
   public async findById(id: string): Promise<DocumentType<QuizEntity> | null> {
-    return this.quizModel.findOne({ id }).exec();
+    return this.quizModel.findOne({ _id: id }).exec();
   }
 
   public async findByTitle(
@@ -44,5 +44,9 @@ export class DefaultQuizService implements IQuizService {
   public async deleteById(id: string): Promise<boolean> {
     const result = await this.quizModel.deleteOne({ id }).exec();
     return result.deletedCount > 0;
+  }
+
+  findByHostId(hostId: string): Promise<DocumentType<QuizEntity>[] | null> {
+    throw new Error("Method not implemented.");
   }
 }

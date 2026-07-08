@@ -5,6 +5,7 @@ import { QuizEntity } from "./quiz.entity.js";
 export interface IQuizService {
   create(dto: CreateQuizDto): Promise<DocumentType<QuizEntity>>;
   findById(id: string): Promise<DocumentType<QuizEntity> | null>;
+  findByHostId(hostId: string): Promise<DocumentType<QuizEntity>[] | null>;
   findByTitle(title: string): Promise<DocumentType<QuizEntity> | null>;
   findAll(): Promise<DocumentType<QuizEntity>[] | null>;
   updateById(

@@ -11,7 +11,7 @@ export type Question = {
 };
 
 export type Quiz = {
-  hostId: number;
+  hostId: string;
   title: string;
   questions: Question[];
 };

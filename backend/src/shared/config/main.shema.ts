@@ -12,6 +12,8 @@ export type MainShema = {
   DB_PORT: string;
   DB_NAME: string;
   JWT_SECRET: string;
+  UPLOAD_DIR: string;
+  STATIC_URL: string;
 };
 
 export const configShema = convict<MainShema>({
@@ -61,6 +63,18 @@ export const configShema = convict<MainShema>({
     doc: "Secret for sign JWT",
     format: String,
     env: "JWT_SECRET",
+    default: null,
+  },
+  UPLOAD_DIR: {
+    doc: "Directory for uploaded images",
+    format: String,
+    env: "UPLOAD_DIR",
+    default: null,
+  },
+  STATIC_URL: {
+    doc: "URL path images",
+    format: String,
+    env: "STATIC_URL",
     default: null,
   },
 });

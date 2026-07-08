@@ -1,0 +1,43 @@
+{
+  "title": "Основы JavaScript",
+  "questions": [
+    {
+      "text": "Какой результат выражения 1 + '1'?",
+      "timeLimit": 30,
+      "points": 10,
+      "answers": [
+        {
+          "text": "2",
+          "isCorrect": false
+        },
+        {
+          "text": "11",
+          "isCorrect": true
+        },
+        {
+          "text": "Ошибка",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "text": "Какое ключевое слово используется для создания константы?",
+      "timeLimit": 15,
+      "points": 5,
+      "answers": [
+        {
+          "text": "var",
+          "isCorrect": false
+        },
+        {
+          "text": "let",
+          "isCorrect": false
+        },
+        {
+          "text": "const",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}

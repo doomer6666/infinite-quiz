@@ -3,49 +3,52 @@ import {
   IsArray,
   IsBoolean,
   IsInt,
+  IsOptional,
   IsString,
   Min,
   ValidateNested,
 } from "class-validator";
 
-export class CreateAnswerDto {
+export class UpdateAnswerDto {
+  @IsOptional()
   @IsString()
   public text!: string;
 
+  @IsOptional()
   @IsBoolean()
   public isCorrect!: boolean;
 }
 
-export class CreateQuestionDto {
-  @IsString()
-  public imagePath?: string;
-
+export class UpdateQuestionDto {
+  @IsOptional()
   @IsString()
   public text!: string;
 
+  @IsOptional()
   @IsInt()
   @Min(1)
   public timeLimit!: number;
 
+  @IsOptional()
   @IsInt()
   @Min(1)
   public points!: number;
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => CreateAnswerDto)
-  public answers!: CreateAnswerDto[];
+  @Type(() => UpdateAnswerDto)
+  public answers!: UpdateAnswerDto[];
 }
 
-export class CreateQuizDto {
-  @IsString()
-  public imagePath?: string;
-
+export class UpdateQuizDto {
+  @IsOptional()
   @IsString()
   public title!: string;
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => CreateQuestionDto)
-  public questions!: CreateQuestionDto[];
+  @Type(() => UpdateQuestionDto)
+  public questions!: UpdateQuestionDto[];
 }

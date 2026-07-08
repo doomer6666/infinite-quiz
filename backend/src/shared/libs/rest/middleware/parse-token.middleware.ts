@@ -4,7 +4,7 @@ import { JWTPayload, jwtVerify } from "jose";
 import { createSecretKey } from "node:crypto";
 import { HttpError } from "../errors/index.js";
 import { StatusCodes } from "http-status-codes";
-import { TokenPayload } from "../../../../modules/auth/Index.js";
+import { TokenPayload } from "../../../../modules/auth/index.js";
 
 function isTokenPayload(payload: JWTPayload): payload is TokenPayload {
   return (

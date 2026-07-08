@@ -1,0 +1,35 @@
+# Квизы
+## Создать нового пользователя
+POST http://localhost:4010/quizzes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc3ODU4NTk4NSwiZXhwIjoxNzc4NzU4Nzg1fQ.uAVOBWOxG_3d1eoK5b-OygkH77CQtOmhzczC8uGPqWM
+
+{
+  "title": "Основы JavaScript",
+  "questions": [
+    {
+      "text": "Какой результат выражения 1 + '1'?",
+      "timeLimit": 30,
+      "points": 10,
+      "answers": [
+        { "text": "2", "isCorrect": false },
+        { "text": "11", "isCorrect": true },
+        { "text": "Ошибка", "isCorrect": false }
+      ]
+    }
+  ]
+}
+
+###
+
+## Получить все квизы
+GET http://localhost:4010/quizzes
+Content-Type: application/json
+
+###
+
+## Получить квиз по ID
+GET http://localhost:4010/quizzes/6a0314a98c3dd350e03e651b
+Content-Type: application/json
+
+###

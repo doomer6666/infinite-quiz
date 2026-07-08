@@ -13,12 +13,9 @@ export const createErrorObject = (message: string) => ({
 });
 
 export const getId = (params: RequestParams): string => {
-  const { offerId } = params;
-  if (typeof offerId !== "string") {
-    throw new HttpError(
-      StatusCodes.BAD_REQUEST,
-      `Id «${offerId}» not correct.`,
-    );
+  const { id } = params;
+  if (typeof id !== "string") {
+    throw new HttpError(StatusCodes.BAD_REQUEST, `Id «${id}» not correct.`);
   }
-  return offerId;
+  return id;
 };
