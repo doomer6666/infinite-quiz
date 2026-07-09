@@ -14,6 +14,7 @@ export type MainShema = {
   JWT_SECRET: string;
   UPLOAD_DIR: string;
   STATIC_URL: string;
+  HOST: string;
 };
 
 export const configShema = convict<MainShema>({
@@ -76,5 +77,11 @@ export const configShema = convict<MainShema>({
     format: String,
     env: "STATIC_URL",
     default: null,
+  },
+  HOST: {
+    doc: "Host where started service",
+    format: String,
+    env: "HOST",
+    default: "localhost",
   },
 });

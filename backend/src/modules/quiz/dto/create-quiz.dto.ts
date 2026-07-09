@@ -18,7 +18,7 @@ export class CreateAnswerDto {
 
 export class CreateQuestionDto {
   @IsString()
-  public imagePath?: string;
+  public imageFilename?: string;
 
   @IsString()
   public text!: string;
@@ -39,7 +39,7 @@ export class CreateQuestionDto {
 
 export class CreateQuizDto {
   @IsString()
-  public imagePath?: string;
+  public imageFilename?: string;
 
   @IsString()
   public title!: string;

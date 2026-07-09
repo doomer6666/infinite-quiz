@@ -28,10 +28,10 @@ export abstract class BaseController implements IController {
     const wrapperAsyncHandler = this.asyncHandler(handler);
 
     const middlewareHandlers = route.middlewares?.map((item) =>
-      this.asyncHandler(item.execute.bind(this)),
+      this.asyncHandler(item.execute.bind(item)),
     );
     const allHandlers = middlewareHandlers
-      ? [wrapperAsyncHandler, ...middlewareHandlers]
+      ? [...middlewareHandlers, wrapperAsyncHandler]
       : wrapperAsyncHandler;
 
     this._router[route.method](route.path, allHandlers);

@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { IsOptional } from "class-validator";
 
-export class CreateAnswerRdo {
+export class AnswerRdo {
   @Expose()
   public text!: string;
 
@@ -9,10 +9,10 @@ export class CreateAnswerRdo {
   public isCorrect!: boolean;
 }
 
-export class CreateQuestionRdo {
+export class QuestionRdo {
   @IsOptional()
   @Expose()
-  public imagePath?: string;
+  public imageFilename?: string;
 
   @Expose()
   public text!: string;
@@ -24,22 +24,22 @@ export class CreateQuestionRdo {
   public points!: number;
 
   @Expose()
-  @Type(() => CreateAnswerRdo)
-  public answers!: CreateAnswerRdo[];
+  @Type(() => AnswerRdo)
+  public answers!: AnswerRdo[];
 }
 
-export class CreateQuizRdo {
+export class QuizRdo {
   @Expose()
   public hostId!: string;
 
   @IsOptional()
   @Expose()
-  public imagePath?: string;
+  public imageFilename?: string;
 
   @Expose()
   public title!: string;
 
   @Expose()
-  @Type(() => CreateQuestionRdo)
-  public questions!: CreateQuestionRdo[];
+  @Type(() => QuestionRdo)
+  public questions!: QuestionRdo[];
 }

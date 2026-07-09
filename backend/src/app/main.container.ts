@@ -7,6 +7,7 @@ import {
   MongoDatabaseClient,
 } from "../shared/database-client/index.js";
 import { ILogger, PinoLogger } from "../shared/libs/logger/index.js";
+import { PathTransformer } from "../shared/libs/rest/transform/path-transformer.js";
 
 export function createMainApplicationContainer(): ContainerModule {
   const container = new ContainerModule(({ bind }) => {
@@ -15,6 +16,9 @@ export function createMainApplicationContainer(): ContainerModule {
       .inSingletonScope();
 
     bind<ILogger>(Component.Logger).to(PinoLogger).inSingletonScope();
+    bind<PathTransformer>(Component.PathTransformer)
+      .to(PathTransformer)
+      .inSingletonScope();
 
     bind<IDatabaseClient>(Component.DatabaseClient)
       .to(MongoDatabaseClient)

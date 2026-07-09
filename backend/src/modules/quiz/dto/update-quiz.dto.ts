@@ -12,43 +12,51 @@ import {
 export class UpdateAnswerDto {
   @IsOptional()
   @IsString()
-  public text!: string;
+  public text?: string;
 
   @IsOptional()
   @IsBoolean()
-  public isCorrect!: boolean;
+  public isCorrect?: boolean;
 }
 
 export class UpdateQuestionDto {
   @IsOptional()
   @IsString()
-  public text!: string;
+  public imageFilename?: string;
+
+  @IsOptional()
+  @IsString()
+  public text?: string;
 
   @IsOptional()
   @IsInt()
   @Min(1)
-  public timeLimit!: number;
+  public timeLimit?: number;
 
   @IsOptional()
   @IsInt()
   @Min(1)
-  public points!: number;
+  public points?: number;
 
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => UpdateAnswerDto)
-  public answers!: UpdateAnswerDto[];
+  public answers?: UpdateAnswerDto[];
 }
 
 export class UpdateQuizDto {
   @IsOptional()
   @IsString()
-  public title!: string;
+  public imageFilename?: string;
+
+  @IsOptional()
+  @IsString()
+  public title?: string;
 
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => UpdateQuestionDto)
-  public questions!: UpdateQuestionDto[];
+  public questions?: UpdateQuestionDto[];
 }

@@ -1,15 +1,16 @@
 import { inject, injectable } from "inversify";
 import { Component } from "../shared/types/index.js";
-import express, { Express } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import { IConfig, MainShema } from "../shared/config/index.js";
 import { IDatabaseClient } from "../shared/database-client/index.js";
 import { getMongoURI } from "../shared/utils/index.js";
-import { IUserService } from "../modules/user/user-service.interface.js";
 import { ILogger } from "../shared/libs/logger/index.js";
 import {
   IController,
   ParseTokenMiddleware,
 } from "../shared/libs/rest/index.js";
+import { HttpError } from "../shared/libs/rest/errors/http-error.js";
+import { StatusCodes } from "http-status-codes";
 
 @injectable()
 export class MainApplication {
@@ -43,6 +44,10 @@ export class MainApplication {
     this.logger.info("Init controllers...");
     await this._intiControllers();
     this.logger.info("Controller initialization completed");
+
+    this.logger.info("Init exception filter...");
+    this._initExceptionFilter();
+    this.logger.info("Exception filter initialization completed");
 
     this.logger.info("Init express server...");
     await this._initServer();
@@ -80,5 +85,25 @@ export class MainApplication {
     );
     this.server.use(express.json());
     this.server.use(parseTokenMiddleware.execute.bind(parseTokenMiddleware));
+  }
+
+  private _initExceptionFilter() {
+    this.server.use(
+      (err: Error, _req: Request, res: Response, _next: NextFunction) => {
+        if (err instanceof HttpError) {
+          res.status(err.httpStatusCode).json({
+            type: "HTTP_ERROR",
+            error: err.message,
+            details: err.detail,
+          });
+          return;
+        }
+
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          type: "UNKNOWN_ERROR",
+          error: err.message,
+        });
+      },
+    );
   }
 }

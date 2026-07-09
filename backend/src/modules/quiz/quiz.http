@@ -1,8 +1,8 @@
 # Квизы
-## Создать нового пользователя
+## Создать новый квиз
 POST http://localhost:4010/quizzes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc3ODU4NTk4NSwiZXhwIjoxNzc4NzU4Nzg1fQ.uAVOBWOxG_3d1eoK5b-OygkH77CQtOmhzczC8uGPqWM
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc4MzUzMzEzNCwiZXhwIjoxNzgzNzA1OTM0fQ.7kHYCjKThNr0Bln0sz7uJeTneqbNXk4WH03PIN1sZww
 
 {
   "title": "Основы JavaScript",
@@ -29,7 +29,58 @@ Content-Type: application/json
 ###
 
 ## Получить квиз по ID
-GET http://localhost:4010/quizzes/6a0314a98c3dd350e03e651b
+GET http://localhost:4010/quizzes/6a4f7a520dc7c210005a56e3
 Content-Type: application/json
+
+###
+
+## Обновить квиз (только название)
+PATCH http://localhost:4010/quizzes/6a4f7a520dc7c210005a56e3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc4MzUzMzEzNCwiZXhwIjoxNzgzNzA1OTM0fQ.7kHYCjKThNr0Bln0sz7uJeTneqbNXk4WH03PIN1sZww
+
+{
+  "title": "Основы JavaScript (обновлено)"
+}
+
+###
+
+## Обновить квиз (полностью с вопросами)
+PATCH http://localhost:4010/quizzes/6a4f7a520dc7c210005a56e3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc4MzUzMzEzNCwiZXhwIjoxNzgzNzA1OTM0fQ.7kHYCjKThNr0Bln0sz7uJeTneqbNXk4WH03PIN1sZww
+
+{
+  "title": "JavaScript для начинающих",
+  "description": "Базовые вопросы по JS",
+  "questions": [
+    {
+      "text": "Что выведет console.log(typeof null)?",
+      "timeLimit": 20,
+      "points": 10,
+      "answers": [
+        { "text": "null", "isCorrect": false },
+        { "text": "object", "isCorrect": true },
+        { "text": "undefined", "isCorrect": false }
+      ]
+    },
+    {
+      "text": "Какой метод добавляет элемент в конец массива?",
+      "timeLimit": 15,
+      "points": 5,
+      "answers": [
+        { "text": "push()", "isCorrect": true },
+        { "text": "pop()", "isCorrect": false },
+        { "text": "shift()", "isCorrect": false }
+      ]
+    }
+  ]
+}
+
+###
+
+## Удалить квиз
+DELETE http://localhost:4010/quizzes/6a4f7a520dc7c210005a56e3
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc4MzUzMzEzNCwiZXhwIjoxNzgzNzA1OTM0fQ.7kHYCjKThNr0Bln0sz7uJeTneqbNXk4WH03PIN1sZww
 
 ###

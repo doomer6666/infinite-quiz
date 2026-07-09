@@ -1,8 +1,14 @@
 import { DocumentType } from "@typegoose/typegoose";
-import { CreateQuizDto } from "./dto/create-quiz.dto.js";
-import { QuizEntity } from "./quiz.entity.js";
+import { CreateQuestionDto, CreateQuizDto } from "./dto/create-quiz.dto.js";
+import { AnswerEntity, QuestionEntity, QuizEntity } from "./quiz.entity.js";
+import {
+  UpdateAnswerDto,
+  UpdateQuestionDto,
+  UpdateQuizDto,
+} from "./dto/update-quiz.dto.js";
 
 export interface IQuizService {
+  exists(id: string): Promise<boolean>;
   create(dto: CreateQuizDto): Promise<DocumentType<QuizEntity>>;
   findById(id: string): Promise<DocumentType<QuizEntity> | null>;
   findByHostId(hostId: string): Promise<DocumentType<QuizEntity>[] | null>;
@@ -10,7 +16,13 @@ export interface IQuizService {
   findAll(): Promise<DocumentType<QuizEntity>[] | null>;
   updateById(
     id: string,
-    dto: CreateQuizDto,
+    dto: UpdateQuizDto,
   ): Promise<DocumentType<QuizEntity> | null>;
   deleteById(id: string): Promise<boolean>;
+  updateQuestionById(
+    quizId: string,
+    questionId: string,
+    dto: UpdateQuestionDto,
+  ): Promise<QuestionEntity | null>;
+  deleteQuestionById(quizId: string, questionId: string): Promise<boolean>;
 }

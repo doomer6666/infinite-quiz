@@ -16,7 +16,7 @@ export class AnswerEntity implements Answer {
 
 export class QuestionEntity implements Question {
   @prop({ type: () => String })
-  public imagePath?: string;
+  public imageFilename?: string;
 
   @prop({ type: () => String, required: true, trim: true })
   public text!: string;
@@ -40,7 +40,7 @@ export class QuizEntity extends defaultClasses.TimeStamps implements Quiz {
   public description?: string;
 
   @prop({ type: () => String, required: true })
-  public imagePath!: string;
+  public imageFilename!: string;
 
   @prop({ type: () => String, required: true })
   public hostId!: string;
