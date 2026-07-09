@@ -11,6 +11,8 @@ import {
 } from "../shared/libs/rest/index.js";
 import { HttpError } from "../shared/libs/rest/errors/http-error.js";
 import { StatusCodes } from "http-status-codes";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
 @injectable()
 export class MainApplication {
@@ -83,6 +85,13 @@ export class MainApplication {
     const parseTokenMiddleware = new ParseTokenMiddleware(
       this.config.get("JWT_SECRET"),
     );
+
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    const staticPath = join(__dirname, "..", "..", "static");
+    const uploadsPath = join(__dirname, "..", "..", "uploads");
+    this.server.use("/static", express.static(staticPath));
+    this.server.use("/uploads", express.static(uploadsPath));
+
     this.server.use(express.json());
     this.server.use(parseTokenMiddleware.execute.bind(parseTokenMiddleware));
   }

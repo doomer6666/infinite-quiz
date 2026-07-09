@@ -8,6 +8,12 @@ export class UserRdo {
   public email!: string;
 
   @Expose()
+  public avatar!: string;
+
+  @Expose()
+  public role!: string;
+
+  @Expose()
   public name!: string;
 
   @Expose()

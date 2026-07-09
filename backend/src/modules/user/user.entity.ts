@@ -4,7 +4,7 @@ import {
   modelOptions,
   prop,
 } from "@typegoose/typegoose";
-import { User } from "../../shared/types/index.js";
+import { User, UserRoleEnum } from "../../shared/types/index.js";
 import { createSHA256 } from "../../shared/utils/index.js";
 
 export interface UserEntity extends defaultClasses.Base {}
@@ -20,7 +20,18 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     this.email = userData.email;
     this.name = userData.name;
     this._password = userData.password;
+    this.avatar = userData.avatar;
+    this.role = userData.role;
   }
+  @prop({ type: () => String, required: true })
+  public avatar!: string;
+
+  @prop({
+    type: () => String,
+    enum: Object.values(UserRoleEnum),
+    required: true,
+  })
+  public role!: string;
 
   @prop({ required: true, default: "", type: () => String })
   public email: string;
@@ -28,7 +39,11 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ required: true, default: "", type: () => String })
   public name: string;
 
-  @prop({ required: true, default: "", type: () => String })
+  @prop({
+    type: () => String,
+    required: true,
+    default: "",
+  })
   private _password: string;
 
   public get password() {

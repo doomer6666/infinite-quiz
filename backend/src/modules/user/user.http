@@ -1,31 +1,67 @@
 # Пользователи
-## Создать нового пользователя
 
-POST http://localhost:4010/users/register HTTP/1.1
+## Получить публичные данные пользователя
+GET http://localhost:4010/users/6a4ff2e686d1a525b515dfbd
+Content-Type: application/json
+
+###
+
+## Создать нового пользователя
+POST http://localhost:4010/users/register
 Content-Type: application/json
 
 {
   "email": "torans@overlook.net",
   "name": "Jefrey Epstine",
-  "password": "shining"
+  "password": "shining",
+  "role":"host"
 }
 
 ###
 
 ## Авторизовать пользователя
-
-POST http://localhost:4010/users/login HTTP/1.1
+POST http://localhost:4010/users/login
 Content-Type: application/json
 
 {
-  "email": "torans@overlook.net",
+  "email": "torans@overlook11.net",
   "password": "shining"
 }
 
 ###
 
 ## Проверить токен пользователя
-GET http://localhost:4010/users/login HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc3ODQ5ODQ3NCwiZXhwIjoxNzc4NjcxMjc0fQ.A69V54CeazbTUb55s_LHSFHnmwDJ4DIjavrclZuLmjI
+GET http://localhost:4010/users/login
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vazExLm5ldCIsIm5hbWUiOiJKZWZyZXkgRXBzdGluZSIsImlkIjoiNmE0ZmYyZTY4NmQxYTUyNWI1MTVkZmJkIiwiaWF0IjoxNzgzNjI0NTE3LCJleHAiOjE3ODM3OTczMTd9.pvlBSL6pAQGq6cxUkpECR66QOE3cAJfJLFR668vCxlQ
+
+###
+
+## Обновить пользователя
+PATCH http://localhost:4010/users/6a0084aa79c48d2e292e0c58
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmZnJleSBFcHN0aW5lIiwiaWQiOiI2YTAwODRhYTc5YzQ4ZDJlMjkyZTBjNTgiLCJpYXQiOjE3Nzg0OTg0NzQsImV4cCI6MTc3ODY3MTI3NH0.A69V54CeazbTUb55s_LHSFHnmwDJ4DIjavrclZuLmjI
+
+{
+  "name": "Jack Torrance",
+  "avatar": "blue.png"
+}
+
+###
+
+## Выйти из системы
+POST http://localhost:4010/users/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmZnJleSBFcHN0aW5lIiwiaWQiOiI2YTAwODRhYTc5YzQ4ZDJlMjkyZTBjNTgiLCJpYXQiOjE3Nzg0OTg0NzQsImV4cCI6MTc3ODY3MTI3NH0.A69V54CeazbTUb55s_LHSFHnmwDJ4DIjavrclZuLmjI
+
+###
+
+## Обновить токен
+POST http://localhost:4010/users/refresh
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmZnJleSBFcHN0aW5lIiwiaWQiOiI2YTAwODRhYTc5YzQ4ZDJlMjkyZTBjNTgiLCJpYXQiOjE3Nzg0OTg0NzQsImV4cCI6MTc3ODY3MTI3NH0.A69V54CeazbTUb55s_LHSFHnmwDJ4DIjavrclZuLmjI
+
+###
+
+## Удалить пользователя
+DELETE http://localhost:4010/users/6a0084aa79c48d2e292e0c58
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmZnJleSBFcHN0aW5lIiwiaWQiOiI2YTAwODRhYTc5YzQ4ZDJlMjkyZTBjNTgiLCJpYXQiOjE3Nzg0OTg0NzQsImV4cCI6MTc3ODY3MTI3NH0.A69V54CeazbTUb55s_LHSFHnmwDJ4DIjavrclZuLmjI
 
 ###
