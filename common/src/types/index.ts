@@ -1,2 +1,2 @@
-export * from "./quiz.type";
-export * from "./user.type";
+export * from "./quiz.type.js";
+export * from "./user.type.js";

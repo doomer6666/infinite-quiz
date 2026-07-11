@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { UserRoleEnum } from "../../enums/index";
+import { UserRoleEnum } from "../../enums/index.js";
 
 export const CreateUserSchema = z.object({
   email: z.string(),

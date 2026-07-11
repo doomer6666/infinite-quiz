@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { UserEntity, LoginUserDto, IUserService } from "../user/index.js";
+import { UserEntity, IUserService } from "../user/index.js";
 import { IAuthService } from "./auth-service.interface.js";
 import * as crypto from "node:crypto";
 import { SignJWT } from "jose";
@@ -12,6 +12,7 @@ import {
 } from "../../shared/libs/rest/index.js";
 import { Component } from "../../shared/types/conponent.js";
 import { MainShema } from "../../shared/config/main.shema.js";
+import { LoginUserDto } from "@infinite-quiz/common";
 
 @injectable()
 export class DefaultAuthService implements IAuthService {

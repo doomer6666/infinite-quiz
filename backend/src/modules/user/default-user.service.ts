@@ -1,12 +1,11 @@
 import { DocumentType, types } from "@typegoose/typegoose";
-import { CreateUserDto } from "./dto/create-user.dto.js";
 import { IUserService } from "./user-service.interface.js";
 import { UserEntity } from "./user.entity.js";
 import { inject, injectable } from "inversify";
 import { Component } from "../../shared/types/conponent.js";
 import { ILogger } from "../../shared/libs/logger/index.js";
-import { UpdateUserDto } from "./dto/update-user.dto.js";
 import { getRandomAvatar } from "../../shared/constants/default-images.js";
+import { CreateUserDto, UpdateUserDto } from "@infinite-quiz/common";
 
 @injectable()
 export class DefaultUserService implements IUserService {

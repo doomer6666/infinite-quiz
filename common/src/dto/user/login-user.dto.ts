@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const LoginUserShema = z.object({
-  token: z.string(),
+  email: z.string(),
   password: z.string().min(6),
 });
 

@@ -11,6 +11,7 @@ const RoleSelector = ({ role, setRole }: RoleSelectorProps) => {
     <div className="role-selector">
       <button
         className={`role-btn ${role === UserRoleEnum.memder ? "active" : ""}`}
+        type="button"
         onClick={() => setRole(UserRoleEnum.memder)}
       >
         <FiUser size={15} />
@@ -18,6 +19,7 @@ const RoleSelector = ({ role, setRole }: RoleSelectorProps) => {
       </button>
       <button
         className={`role-btn ${role === UserRoleEnum.host ? "active" : ""}`}
+        type="button"
         onClick={() => setRole(UserRoleEnum.host)}
       >
         <FiBriefcase size={15} />

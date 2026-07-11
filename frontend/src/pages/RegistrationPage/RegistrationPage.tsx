@@ -1,4 +1,4 @@
-import { FiAtSign, FiMail, FiPlus } from "react-icons/fi";
+import { FiAtSign, FiMail } from "react-icons/fi";
 import "./RegistrationPage.css";
 import PasswordInput from "../../shared/ui/components/PasswordInput/PasswordInput";
 import RoleSelector from "../../shared/ui/components/RoleSelector/RoleSelector";
@@ -7,6 +7,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { useCreateUserMutation } from "./registration.api";
+import { Link } from "react-router-dom";
 
 const RegisterSchema = CreateUserSchema.extend({
   confirmPassword: z.string(),
@@ -178,12 +179,11 @@ const RegistrationPage = () => {
           </div>
 
           <button className="btn-primary" type="submit">
-            <FiPlus size={17} />
             Зарегистрироваться
           </button>
 
           <p className="switch-text">
-            Уже есть аккаунт? <a href="/login">Войти</a>
+            Уже есть аккаунт? <Link to="/login">Войти</Link>
           </p>
           <p className="terms-text">
             Регистрируясь, вы соглашаетесь с{" "}

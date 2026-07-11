@@ -9,13 +9,16 @@
     "build": "npm run clean && npm run compile",
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "ts": "tsx",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "prets": "cd ../common && npm run build",
+    "predev": "cd ../common && npm run build",
+    "ts": "tsx ./src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@infinite-quiz/common": "file:../common",
     "@typegoose/typegoose": "^13.2.1",
     "class-validator": "^0.15.1",
     "convict": "^6.2.5",

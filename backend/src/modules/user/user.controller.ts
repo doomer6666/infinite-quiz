@@ -7,28 +7,46 @@ import {
   PathTransformerMiddleware,
   PrivateRouteMiddleware,
   UploadFileMiddleware,
+  ValidateZodMiddleware,
 } from "../../shared/libs/rest/index.js";
 import { ILogger } from "../../shared/libs/logger/index.js";
 import { Component } from "../../shared/types/index.js";
-import { IUserService, LoginUserDto } from "./index.js";
+import { IUserService, UserEntity } from "./index.js";
 import { IConfig, MainShema } from "../../shared/config/index.js";
 import { StatusCodes } from "http-status-codes";
 import { CreateUserRequest } from "./requests/create-user-request.type.js";
-import { fillDTO, getId } from "../../shared/utils/common.js";
-import { UserRdo } from "./rdo/user.rdo.js";
+import { getId } from "../../shared/utils/common.js";
 import { Request, Response } from "express";
-import { ValidateDtoMiddleware } from "../../shared/libs/rest/middleware/validate-dto.middleware.js";
-import { CreateUserDto } from "./dto/create-user.dto.js";
-import { LoggedUserRdo } from "./rdo/logged-user.rdo.js";
 import { IAuthService } from "../auth/auth-service.interface.js";
 import { LoginUserRequest } from "./requests/login-user-request.type.js";
 import { LogoutUserRequest } from "./requests/logout-user-request.type.js";
 import { RefreshUserRequest } from "./requests/refresh-user-request.type.js";
-import { UpdateUserDto } from "./dto/update-user.dto.js";
 import { UpdateUserRequest } from "./requests/update-user-request.type.js";
-import { PublicUserRdo } from "./rdo/public-user.rdo.js";
 import { PathTransformer } from "../../shared/libs/rest/transform/path-transformer.js";
+import {
+  CreateUserSchema,
+  LoggedUserSсhema,
+  LoginUserShema,
+  PublicUserShema,
+  type UpdateUserDto,
+} from "@infinite-quiz/common";
+import { DocumentType } from "@typegoose/typegoose";
 
+export function userToResponse(user: {
+  _id: unknown;
+  email: string;
+  name: string;
+  avatar: string;
+  role: string;
+}) {
+  return {
+    id: String(user._id),
+    email: user.email,
+    name: user.name,
+    avatar: user.avatar,
+    role: user.role,
+  };
+}
 @injectable()
 export class UserContoller extends BaseController {
   private readonly pathTransformerMiddleware: PathTransformerMiddleware;
@@ -51,7 +69,7 @@ export class UserContoller extends BaseController {
       path: "/register",
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateUserDto)],
+      middlewares: [new ValidateZodMiddleware(CreateUserSchema)],
     });
 
     this.addRoute({
@@ -64,7 +82,7 @@ export class UserContoller extends BaseController {
       path: "/login",
       method: HttpMethod.Post,
       handler: this.login,
-      middlewares: [new ValidateDtoMiddleware(LoginUserDto)],
+      middlewares: [new ValidateZodMiddleware(LoginUserShema)],
     });
     this.addRoute({
       path: "/logout",
@@ -123,7 +141,6 @@ export class UserContoller extends BaseController {
     res: Response,
   ): Promise<void> {
     const existUser = await this.userService.findByEmail(body.email);
-
     if (existUser) {
       throw new HttpError(
         StatusCodes.CONFLICT,
@@ -133,42 +150,43 @@ export class UserContoller extends BaseController {
     }
 
     const result = await this.userService.create(body, this.config.get("SALT"));
-    this.created(res, fillDTO(UserRdo, result));
+    const token = await this.authService.authenticate(result);
+
+    this.created(
+      res,
+      LoggedUserSсhema.parse({ ...userToResponse(result), token }),
+    );
   }
 
   public async getUserById({ params }: Request, res: Response) {
     const id = getId(params);
     const user = await this.userService.findById(id);
-
     if (!user) {
       throw new HttpError(StatusCodes.NOT_FOUND, "User not found");
     }
 
-    this.ok(
-      res,
-      fillDTO(PublicUserRdo, {
-        id: user._id.toString(),
-        name: user.name,
-        avatar: user.avatar,
-      }),
-    );
+    this.ok(res, PublicUserShema.parse(userToResponse(user)));
   }
 
   public async update(req: UpdateUserRequest, res: Response) {
     const userDto: UpdateUserDto = req.body;
-    const id: string = getId(req.params);
+    const id = getId(req.params);
 
-    const updateUser = await this.userService.updateById(id, userDto);
-    return this.ok(res, fillDTO(UpdateUserDto, updateUser));
+    const updatedUser = await this.userService.updateById(id, userDto);
+    if (!updatedUser) {
+      throw new HttpError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    this.ok(res, PublicUserShema.parse(userToResponse(updatedUser)));
   }
 
   public async delete({ params }: Request, res: Response) {
     const id = getId(params);
-    const isDelited = await this.userService.deleteById(id);
-    if (!isDelited) {
-      this.logger.warn(`${id} is not deleted!`);
+    const isDeleted = await this.userService.deleteById(id);
+    if (!isDeleted) {
+      this.logger.warn(`User ${id} is not deleted!`);
     }
-    return this.noContent(res, isDelited);
+    this.noContent(res, isDeleted);
   }
 
   public async checkAuthenticate(
@@ -185,18 +203,14 @@ export class UserContoller extends BaseController {
       );
     }
 
-    this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
+    this.ok(res, PublicUserShema.parse(userToResponse(foundedUser)));
   }
 
   public async login({ body }: LoginUserRequest, res: Response) {
     const user = await this.authService.verify(body);
     const token = await this.authService.authenticate(user);
 
-    const responseData = fillDTO(LoggedUserRdo, {
-      email: user.email,
-      token,
-    });
-    this.ok(res, responseData);
+    this.ok(res, LoggedUserSсhema.parse({ ...userToResponse(user), token }));
   }
 
   public async logout(
@@ -214,15 +228,21 @@ export class UserContoller extends BaseController {
   }
 
   public async uploadImage({ params, file }: Request, res: Response) {
-    if (!file || typeof params.quizId !== "string") {
+    if (!file || typeof params.id !== "string") {
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
         "Image is required",
-        "QuizController",
+        "UserController",
       );
     }
-    const updateDto = { avatar: file.filename };
-    const result = await this.userService.updateById(params.quizId, updateDto);
-    this.created(res, fillDTO(UserRdo, result));
+
+    const result = await this.userService.updateById(params.id, {
+      avatar: file.filename,
+    });
+    if (!result) {
+      throw new HttpError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    this.created(res, PublicUserShema.parse(userToResponse(result)));
   }
 }
