@@ -1,0 +1,13 @@
+{
+  "name": "@infinite-quiz/common",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}

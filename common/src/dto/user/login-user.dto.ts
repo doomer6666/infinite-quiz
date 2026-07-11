@@ -1,0 +1,8 @@
+import z from "zod";
+
+export const LoginUserShema = z.object({
+  token: z.string(),
+  password: z.string().min(6),
+});
+
+export type LoginUserDto = z.infer<typeof LoginUserShema>;
