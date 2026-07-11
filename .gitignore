@@ -9,4 +9,8 @@ node_modules
 coverage
 .vscode
 backend/.env
+backend/uploads
+frontend/templates
+frontend/.env
 *.log
+*.md

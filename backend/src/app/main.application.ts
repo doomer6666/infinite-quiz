@@ -13,6 +13,7 @@ import { HttpError } from "../shared/libs/rest/errors/http-error.js";
 import { StatusCodes } from "http-status-codes";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import cors from "cors";
 
 @injectable()
 export class MainApplication {
@@ -89,6 +90,14 @@ export class MainApplication {
     const __dirname = dirname(fileURLToPath(import.meta.url));
     const staticPath = join(__dirname, "..", "..", "static");
     const uploadsPath = join(__dirname, "..", "..", "uploads");
+
+    this.server.use(
+      cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+      }),
+    );
+
     this.server.use("/static", express.static(staticPath));
     this.server.use("/uploads", express.static(uploadsPath));
 

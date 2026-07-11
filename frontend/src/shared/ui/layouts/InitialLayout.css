@@ -1,0 +1,125 @@
+ body::before {
+     content: '';
+     position: fixed;
+     top: -30%;
+     right: -20%;
+     width: 700px;
+     height: 700px;
+     background: radial-gradient(circle, rgba(0, 119, 255, 0.08) 0%, transparent 70%);
+     pointer-events: none;
+     z-index: 0;
+ }
+
+ body::after {
+     content: '';
+     position: fixed;
+     bottom: -30%;
+     left: -20%;
+     width: 600px;
+     height: 600px;
+     background: radial-gradient(circle, rgba(0, 85, 204, 0.06) 0%, transparent 70%);
+     pointer-events: none;
+     z-index: 0;
+ }
+
+ .app-wrapper {
+     display: flex;
+     width: 100%;
+     max-width: 1100px;
+     min-height: 700px;
+     background: #FFFFFF;
+     border-radius: 28px;
+     box-shadow: 0 4px 40px var(--shadow), 0 1px 8px rgba(0, 0, 0, 0.06);
+     overflow: hidden;
+     position: relative;
+     z-index: 1;
+ }
+
+ .side-panel {
+     width: 380px;
+     flex-shrink: 0;
+     background: linear-gradient(145deg, var(--primary) 0%, var(--primary-dark) 60%, var(--primary-darker) 100%);
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     padding: 40px 24px;
+     position: relative;
+     overflow: hidden;
+ }
+
+ .side-panel::before {
+     content: '';
+     position: absolute;
+     top: -80px;
+     right: -80px;
+     width: 280px;
+     height: 280px;
+     border-radius: 50%;
+     background: rgba(255, 255, 255, 0.05);
+     pointer-events: none;
+ }
+
+ .side-panel::after {
+     content: '';
+     position: absolute;
+     bottom: -60px;
+     left: -60px;
+     width: 220px;
+     height: 220px;
+     border-radius: 50%;
+     background: rgba(255, 255, 255, 0.03);
+     pointer-events: none;
+ }
+
+ .side-deco {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     width: 340px;
+     height: 340px;
+     border-radius: 50%;
+     border: 1px solid rgba(255, 255, 255, 0.07);
+     pointer-events: none;
+ }
+
+ .side-deco-2 {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     width: 500px;
+     height: 500px;
+     border-radius: 50%;
+     border: 1px solid rgba(255, 255, 255, 0.03);
+     pointer-events: none;
+ }
+
+ .zigzag-text {
+     position: relative;
+     z-index: 1;
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+     gap: 0;
+     user-select: none;
+     line-height: 1;
+     min-width: 30%;
+ }
+
+ .zigzag-letter {
+     display: block;
+     font-size: 56px;
+     font-weight: 900;
+     color: #FFFFFF;
+     letter-spacing: -2px;
+     text-transform: uppercase;
+     opacity: 0.95;
+     line-height: 0.85;
+     margin: 4px 0;
+ }
+
+ .zigzag-letter:nth-child(even) {
+     align-self: flex-end;
+ }

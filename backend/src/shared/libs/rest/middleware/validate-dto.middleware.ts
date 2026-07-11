@@ -12,6 +12,7 @@ export class ValidateDtoMiddleware implements IMiddleware {
     res: Response,
     next: NextFunction,
   ): Promise<void> {
+    console.log(body);
     const dtoInstance = plainToInstance(this.dto, body);
     const errors = await validate(dtoInstance);
     if (errors.length > 0) {
