@@ -10,6 +10,7 @@
       "@/*": ["./src/*"],
       "@app/*": ["./src/app/*"],
       "@entities/*": ["./src/entities/*"],
+      "@feature/*": ["./src/feature/*"],
       "@shared/*": ["./src/shared/*"]
     },
     /* Bundler mode */

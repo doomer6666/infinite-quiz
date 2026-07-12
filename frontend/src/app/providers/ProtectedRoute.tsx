@@ -1,5 +1,5 @@
-import { useMeQuery } from "@/shared/ui/api";
-import { useAppSelector } from "@/shared/ui/lib/hooks";
+import { useMeQuery } from "@/shared/api";
+import { useAppSelector } from "@/shared/lib/hooks";
 import { Navigate, Outlet } from "react-router-dom";
 
 export const ProtectedRoute = () => {

@@ -9,7 +9,7 @@ import {
   clearCurrentUser,
   setCurrentUserInfo,
   setToken,
-} from "../../entities/user/index";
+} from "../entities/user/index";
 import type { UserDto } from "@infinite-quiz/common";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;

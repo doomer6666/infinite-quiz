@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoginUserMutation } from "./login.api";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAppDispatch } from "../../shared/ui/lib/hooks";
+import { useAppDispatch } from "../../shared/lib/hooks";
 import { setCurrentUser } from "../../entities/user/index";
 
 const LoginPage = () => {

@@ -1,4 +1,4 @@
-import { baseApi } from "../../shared/ui/api";
+import { baseApi } from "@/shared/api";
 import type { CreateUserDto, UserWithTokenDto } from "@infinite-quiz/common";
 
 export const registrationApi = baseApi.injectEndpoints({

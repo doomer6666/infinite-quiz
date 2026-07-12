@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { useCreateUserMutation } from "./registration.api";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../shared/ui/lib/hooks";
+import { useAppDispatch } from "../../shared/lib/hooks";
 import { setCurrentUser } from "../../entities/user/index";
 
 const RegisterSchema = CreateUserSchema.extend({

@@ -1,5 +1,5 @@
 import type { UserWithTokenDto, LoginUserDto } from "@infinite-quiz/common";
-import { baseApi } from "../../shared/ui/api";
+import { baseApi } from "@/shared/api";
 
 export const loginApi = baseApi.injectEndpoints({
   endpoints: (build) => ({

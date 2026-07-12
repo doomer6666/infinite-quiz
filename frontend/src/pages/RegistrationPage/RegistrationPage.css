@@ -1,3 +1,10 @@
+body:has(.form-panel) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
 .form-panel {
     flex: 1;
     display: flex;
