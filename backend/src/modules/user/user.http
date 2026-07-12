@@ -24,7 +24,7 @@ POST http://localhost:4010/users/login
 Content-Type: application/json
 
 {
-  "email": "torans@overlook11.net",
+  "email": "torans@overlook.net",
   "password": "shining"
 }
 
@@ -32,7 +32,7 @@ Content-Type: application/json
 
 ## Проверить токен пользователя
 GET http://localhost:4010/users/login
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vazExLm5ldCIsIm5hbWUiOiJKZWZyZXkgRXBzdGluZSIsImlkIjoiNmE0ZmYyZTY4NmQxYTUyNWI1MTVkZmJkIiwiaWF0IjoxNzgzNjI0NTE3LCJleHAiOjE3ODM3OTczMTd9.pvlBSL6pAQGq6cxUkpECR66QOE3cAJfJLFR668vCxlQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vazExLm5ldCIsIm5hbWUiOiJKZWZyZXkgRXBzdGluZSIsImlkIjoiNmE0ZmYyZTY4NmQxYTUyNWI1MTVkZmJkIiwiaWF0IjoxNzgzNzk0MzA4LCJleHAiOjE3ODM5NjcxMDh9.rxj5p6ukSdKCtYIipCXLMoZgeRYcY7GVV1t_ReJwVgs
 
 ###
 
@@ -50,18 +50,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZ
 
 ## Выйти из системы
 POST http://localhost:4010/users/logout
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmZnJleSBFcHN0aW5lIiwiaWQiOiI2YTAwODRhYTc5YzQ4ZDJlMjkyZTBjNTgiLCJpYXQiOjE3Nzg0OTg0NzQsImV4cCI6MTc3ODY3MTI3NH0.A69V54CeazbTUb55s_LHSFHnmwDJ4DIjavrclZuLmjI
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vazExLm5ldCIsIm5hbWUiOiJKZWZyZXkgRXBzdGluZSIsImlkIjoiNmE0ZmYyZTY4NmQxYTUyNWI1MTVkZmJkIiwiaWF0IjoxNzgzNzk0MzA4LCJleHAiOjE3ODM5NjcxMDh9.rxj5p6ukSdKCtYIipCXLMoZgeRYcY7GVV1t_ReJwVgs
 
 ###
 
 ## Обновить токен
 POST http://localhost:4010/users/refresh
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmZnJleSBFcHN0aW5lIiwiaWQiOiI2YTAwODRhYTc5YzQ4ZDJlMjkyZTBjNTgiLCJpYXQiOjE3Nzg0OTg0NzQsImV4cCI6MTc3ODY3MTI3NH0.A69V54CeazbTUb55s_LHSFHnmwDJ4DIjavrclZuLmjI
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhNTI4YjI0ZWE4OTMyNjFmZDY5NTY4ZCIsImlhdCI6MTc4Mzc5NDg5MSwiZXhwIjoxNzgzOTY3NjkxfQ.VAeaiBWIQ4cD9YckjSbsUHs-MAxDknB30b4a-WeNfQg
+
+###
+
+## Получить пользователя по токену
+GET http://localhost:4010/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhNTI4YjI0ZWE4OTMyNjFmZDY5NTY4ZCIsImlhdCI6MTc4Mzc5NDg5MSwiZXhwIjoxNzgzOTY3NjkxfQ.VAeaiBWIQ4cD9YckjSbsUHs-MAxDknB30b4a-WeNfQg
 
 ###
 
 ## Удалить пользователя
-DELETE http://localhost:4010/users/6a0084aa79c48d2e292e0c58
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmZnJleSBFcHN0aW5lIiwiaWQiOiI2YTAwODRhYTc5YzQ4ZDJlMjkyZTBjNTgiLCJpYXQiOjE3Nzg0OTg0NzQsImV4cCI6MTc3ODY3MTI3NH0.A69V54CeazbTUb55s_LHSFHnmwDJ4DIjavrclZuLmjI
-
+DELETE http://localhost:4010/users/6a4ff2e686d1a525b515dfbd
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vazExLm5ldCIsIm5hbWUiOiJKZWZyZXkgRXBzdGluZSIsImlkIjoiNmE0ZmYyZTY4NmQxYTUyNWI1MTVkZmJkIiwiaWF0IjoxNzgzNzk0NDI0LCJleHAiOjE3ODM5NjcyMjR9.s-MEoKU_sU5xRvD-nA-85k6-53GsEvp6p3oDSzcMxDU
 ###

@@ -92,6 +92,12 @@ export class UserContoller extends BaseController {
     });
 
     this.addRoute({
+      path: "/me",
+      method: HttpMethod.Get,
+      handler: this.me,
+      middlewares: [new PrivateRouteMiddleware()],
+    });
+    this.addRoute({
       path: "/refresh",
       method: HttpMethod.Post,
       handler: this.refresh,
@@ -220,11 +226,24 @@ export class UserContoller extends BaseController {
     this.noContent(res, { body });
   }
 
-  public async refresh(
-    { body }: RefreshUserRequest,
-    res: Response,
-  ): Promise<void> {
-    this.ok(res, body.token);
+  public async me({ tokenPayload }: Request, res: Response): Promise<void> {
+    const { email } = tokenPayload;
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+      throw new HttpError(StatusCodes.UNAUTHORIZED, "User not found");
+    }
+    this.ok(res, userToResponse(user));
+  }
+
+  public async refresh(req: Request, res: Response): Promise<void> {
+    const { email } = req.tokenPayload;
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+      throw new HttpError(StatusCodes.UNAUTHORIZED, "User not found");
+    }
+
+    const token = await this.authService.authenticate(user);
+    this.ok(res, { token });
   }
 
   public async uploadImage({ params, file }: Request, res: Response) {

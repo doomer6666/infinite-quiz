@@ -1,16 +1,16 @@
 import { baseApi } from "../../shared/ui/api";
-import type { CreateUserDto, LoggedUserDto } from "@infinite-quiz/common";
+import type { CreateUserDto, UserWithTokenDto } from "@infinite-quiz/common";
 
 export const registrationApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    createUser: build.mutation<LoggedUserDto, CreateUserDto>({
+    createUser: build.mutation<UserWithTokenDto, CreateUserDto>({
       query: (userData) => ({
         url: "/users/register",
         method: "POST",
         body: userData,
       }),
 
-      invalidatesTags: ["User"],
+      invalidatesTags: ["CurrentUser"],
     }),
   }),
 });

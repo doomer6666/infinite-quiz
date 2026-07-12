@@ -7,7 +7,9 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { useCreateUserMutation } from "./registration.api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../shared/ui/lib/hooks";
+import { setCurrentUser } from "../../entities/user/index";
 
 const RegisterSchema = CreateUserSchema.extend({
   confirmPassword: z.string(),
@@ -54,7 +56,8 @@ const checkStrength = (val: string) => {
 
 const RegistrationPage = () => {
   const [createUser] = useCreateUserMutation();
-
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -71,9 +74,10 @@ const RegistrationPage = () => {
   const onSubmit = async (data: RegisterForm) => {
     try {
       const dto = CreateUserSchema.parse(data);
-      console.log(data);
-      const res = await createUser(dto).unwrap();
-      console.log(res);
+      const user = await createUser(dto).unwrap();
+
+      dispatch(setCurrentUser(user));
+      navigate("/quizes");
     } catch (err) {
       console.error("Ошибка создания:", err);
     }
