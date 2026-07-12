@@ -25,7 +25,7 @@ import { UpdateUserRequest } from "./requests/update-user-request.type.js";
 import { PathTransformer } from "../../shared/libs/rest/transform/path-transformer.js";
 import {
   CreateUserSchema,
-  LoggedUserSсhema,
+  UserWithTokenSсhema,
   LoginUserShema,
   PublicUserShema,
   type UpdateUserDto,
@@ -69,20 +69,29 @@ export class UserContoller extends BaseController {
       path: "/register",
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateZodMiddleware(CreateUserSchema)],
+      middlewares: [
+        new ValidateZodMiddleware(CreateUserSchema),
+        this.pathTransformerMiddleware,
+      ],
     });
 
     this.addRoute({
       path: "/login",
       method: HttpMethod.Get,
       handler: this.checkAuthenticate,
-      middlewares: [new PrivateRouteMiddleware()],
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        this.pathTransformerMiddleware,
+      ],
     });
     this.addRoute({
       path: "/login",
       method: HttpMethod.Post,
       handler: this.login,
-      middlewares: [new ValidateZodMiddleware(LoginUserShema)],
+      middlewares: [
+        new ValidateZodMiddleware(LoginUserShema),
+        this.pathTransformerMiddleware,
+      ],
     });
     this.addRoute({
       path: "/logout",
@@ -95,7 +104,10 @@ export class UserContoller extends BaseController {
       path: "/me",
       method: HttpMethod.Get,
       handler: this.me,
-      middlewares: [new PrivateRouteMiddleware()],
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        this.pathTransformerMiddleware,
+      ],
     });
     this.addRoute({
       path: "/refresh",
@@ -120,6 +132,7 @@ export class UserContoller extends BaseController {
         new PrivateRouteMiddleware(),
         new DocumentExistsMiddleware(userService, "User", "id"),
         new UploadFileMiddleware(this.config.get("UPLOAD_DIR"), "avatar"),
+        this.pathTransformerMiddleware,
       ],
     });
     this.addRoute({
@@ -129,6 +142,7 @@ export class UserContoller extends BaseController {
       middlewares: [
         new PrivateRouteMiddleware(),
         new DocumentExistsMiddleware(userService, "User", "id"),
+        this.pathTransformerMiddleware,
       ],
     });
     this.addRoute({
@@ -160,7 +174,7 @@ export class UserContoller extends BaseController {
 
     this.created(
       res,
-      LoggedUserSсhema.parse({ ...userToResponse(result), token }),
+      UserWithTokenSсhema.parse({ ...userToResponse(result), token }),
     );
   }
 
@@ -216,7 +230,7 @@ export class UserContoller extends BaseController {
     const user = await this.authService.verify(body);
     const token = await this.authService.authenticate(user);
 
-    this.ok(res, LoggedUserSсhema.parse({ ...userToResponse(user), token }));
+    this.ok(res, UserWithTokenSсhema.parse({ ...userToResponse(user), token }));
   }
 
   public async logout(

@@ -306,6 +306,12 @@
     box-shadow: 0 0 0 2px var(--primary-lighter);
 }
 
+.topbar-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
 /* ── PAGE BODY ── */
 .page-body {
     padding: 28px 32px;
