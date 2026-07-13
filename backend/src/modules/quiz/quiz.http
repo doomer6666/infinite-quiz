@@ -1,11 +1,14 @@
 # Квизы
+
 ## Создать новый квиз
 POST http://localhost:4010/quizzes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc4MzUzMzEzNCwiZXhwIjoxNzgzNzA1OTM0fQ.7kHYCjKThNr0Bln0sz7uJeTneqbNXk4WH03PIN1sZww
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhNTI4YjI0ZWE4OTMyNjFmZDY5NTY4ZCIsImlhdCI6MTc4Mzg3NzkwNiwiZXhwIjoxNzg0MDUwNzA2fQ.VxeZ-3TitBmwA9-m1wi7zc5Y6kRNylkqO20FXZRM8-A
 
 {
   "title": "Основы JavaScript",
+  "category": "technologies",
+  "status": "draft",
   "questions": [
     {
       "text": "Какой результат выражения 1 + '1'?",
@@ -22,22 +25,56 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZ
 
 ###
 
-## Получить все квизы
-GET http://localhost:4010/quizzes
+## Создать квиз с изображением и описанием
+POST http://localhost:4010/quizzes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhNTI4YjI0ZWE4OTMyNjFmZDY5NTY4ZCIsImlhdCI6MTc4Mzg3NzkwNiwiZXhwIjoxNzg0MDUwNzA2fQ.VxeZ-3TitBmwA9-m1wi7zc5Y6kRNylkqO20FXZRM8-A
+
+{
+  "title": "История Древнего Рима",
+  "category": "history",
+  "status": "published",
+  "imageFilename": "rome.jpg",
+  "questions": [
+    {
+      "text": "В каком году был основан Рим?",
+      "timeLimit": 20,
+      "points": 15,
+      "answers": [
+        { "text": "753 до н.э.", "isCorrect": true },
+        { "text": "509 до н.э.", "isCorrect": false },
+        { "text": "27 до н.э.", "isCorrect": false }
+      ]
+    },
+    {
+      "text": "Кто был первым императором Рима?",
+      "timeLimit": 15,
+      "points": 10,
+      "answers": [
+        { "text": "Юлий Цезарь", "isCorrect": false },
+        { "text": "Август", "isCorrect": true },
+        { "text": "Нерон", "isCorrect": false }
+      ]
+    }
+  ]
+}
 
 ###
 
-## Получить квиз по ID
-GET http://localhost:4010/quizzes/6a4f7a520dc7c210005a56e3
-Content-Type: application/json
+## Получить все квизы (без вопросов)
+GET http://localhost:4010/quizzes
+
+###
+
+## Получить квиз по ID (с вопросами)
+GET http://localhost:4010/quizzes/6a53d376bd12281c27740c2e
 
 ###
 
 ## Обновить квиз (только название)
-PATCH http://localhost:4010/quizzes/6a4f7a520dc7c210005a56e3
+PATCH http://localhost:4010/quizzes/6a53d376bd12281c27740c2e
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc4MzUzMzEzNCwiZXhwIjoxNzgzNzA1OTM0fQ.7kHYCjKThNr0Bln0sz7uJeTneqbNXk4WH03PIN1sZww
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhNTI4YjI0ZWE4OTMyNjFmZDY5NTY4ZCIsImlhdCI6MTc4Mzg3NzkwNiwiZXhwIjoxNzg0MDUwNzA2fQ.VxeZ-3TitBmwA9-m1wi7zc5Y6kRNylkqO20FXZRM8-A
 
 {
   "title": "Основы JavaScript (обновлено)"
@@ -45,14 +82,26 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZ
 
 ###
 
-## Обновить квиз (полностью с вопросами)
-PATCH http://localhost:4010/quizzes/6a4f7a520dc7c210005a56e3
+## Обновить квиз (сменить статус на published)
+PATCH http://localhost:4010/quizzes/6a53d376bd12281c27740c2e
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc4MzUzMzEzNCwiZXhwIjoxNzgzNzA1OTM0fQ.7kHYCjKThNr0Bln0sz7uJeTneqbNXk4WH03PIN1sZww
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhNTI4YjI0ZWE4OTMyNjFmZDY5NTY4ZCIsImlhdCI6MTc4Mzg3NzkwNiwiZXhwIjoxNzg0MDUwNzA2fQ.VxeZ-3TitBmwA9-m1wi7zc5Y6kRNylkqO20FXZRM8-A
+
+{
+  "status": "published"
+}
+
+###
+
+## Обновить квиз (полностью с вопросами)
+PATCH http://localhost:4010/quizzes/6a53d376bd12281c27740c2e
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhNTI4YjI0ZWE4OTMyNjFmZDY5NTY4ZCIsImlhdCI6MTc4Mzg3NzkwNiwiZXhwIjoxNzg0MDUwNzA2fQ.VxeZ-3TitBmwA9-m1wi7zc5Y6kRNylkqO20FXZRM8-A
 
 {
   "title": "JavaScript для начинающих",
-  "description": "Базовые вопросы по JS",
+  "category": "technologies",
+  "status": "published",
   "questions": [
     {
       "text": "Что выведет console.log(typeof null)?",
@@ -81,6 +130,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZ
 
 ## Удалить квиз
 DELETE http://localhost:4010/quizzes/6a4f7a520dc7c210005a56e3
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhMDA4NGFhNzljNDhkMmUyOTJlMGM1OCIsImlhdCI6MTc4MzUzMzEzNCwiZXhwIjoxNzgzNzA1OTM0fQ.7kHYCjKThNr0Bln0sz7uJeTneqbNXk4WH03PIN1sZww
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhNTI4YjI0ZWE4OTMyNjFmZDY5NTY4ZCIsImlhdCI6MTc4Mzg3NzkwNiwiZXhwIjoxNzg0MDUwNzA2fQ.VxeZ-3TitBmwA9-m1wi7zc5Y6kRNylkqO20FXZRM8-A
+
+###
+
+## Получить квизы текущего пользователя
+GET http://localhost:4010/quizzes/my
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmVmcmV5IEVwc3RpbmUiLCJpZCI6IjZhNTI4YjI0ZWE4OTMyNjFmZDY5NTY4ZCIsImlhdCI6MTc4Mzg3NzkwNiwiZXhwIjoxNzg0MDUwNzA2fQ.VxeZ-3TitBmwA9-m1wi7zc5Y6kRNylkqO20FXZRM8-A
 
 ###

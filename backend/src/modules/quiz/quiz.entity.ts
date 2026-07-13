@@ -1,12 +1,22 @@
 import {
+  Answer,
+  Question,
+  Quiz,
+  QuizCategoryEnum,
+  QuizStatusEnum,
+  type QuizStatus,
+} from "@infinite-quiz/common";
+import {
   defaultClasses,
   getModelForClass,
   modelOptions,
   prop,
 } from "@typegoose/typegoose";
-import type { Answer, Question, Quiz } from "../../shared/types/index.js";
+import { Types } from "mongoose";
 
 export class AnswerEntity implements Answer {
+  public _id!: Types.ObjectId;
+
   @prop({ type: () => String, required: true, trim: true })
   public text!: string;
 
@@ -15,6 +25,8 @@ export class AnswerEntity implements Answer {
 }
 
 export class QuestionEntity implements Question {
+  public _id!: Types.ObjectId;
+
   @prop({ type: () => String })
   public imageFilename?: string;
 
@@ -28,7 +40,7 @@ export class QuestionEntity implements Question {
   public points!: number;
 
   @prop({ required: true, type: () => [AnswerEntity] })
-  public answers!: Answer[];
+  public answers!: AnswerEntity[];
 }
 
 @modelOptions({ schemaOptions: { collection: "quiz" } })
@@ -46,7 +58,25 @@ export class QuizEntity extends defaultClasses.TimeStamps implements Quiz {
   public hostId!: string;
 
   @prop({ required: true, type: () => [QuestionEntity] })
-  public questions!: Question[];
+  public questions!: QuestionEntity[];
+
+  @prop({
+    required: true,
+    type: () => String,
+  })
+  public status!: QuizStatus;
+
+  @prop({ type: () => Number, required: true })
+  questionCount!: number;
+
+  @prop({ type: () => Number, required: true })
+  pointsCount!: number;
+
+  @prop({
+    type: () => String,
+    required: true,
+  })
+  category!: string;
 }
 
 export const QuizModel = getModelForClass(QuizEntity);

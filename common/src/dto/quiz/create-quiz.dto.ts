@@ -1,25 +1,28 @@
-export class CreateAnswerDto {
-  public text!: string;
+import z from "zod";
+import { QuizCategoryEnum, QuizStatusEnum } from "../../types/index";
 
-  public isCorrect!: boolean;
-}
+export const CreateQuizSchema = z.object({
+  title: z.string().min(1, "Название обязательно"),
+  imageFilename: z.string().optional(),
+  category: z.enum(QuizCategoryEnum),
+  status: z.enum(QuizStatusEnum),
+  questions: z
+    .array(
+      z.object({
+        text: z.string().min(1, "Вопрос не может быть пустым"),
+        points: z.number().min(1),
+        timeLimit: z.number().min(1),
+        answers: z
+          .array(
+            z.object({
+              text: z.string().min(1, "Ответ не может быть пустым"),
+              isCorrect: z.boolean(),
+            }),
+          )
+          .min(2, "Минимум 2 варианта ответа"),
+      }),
+    )
+    .min(1, "Минимум 1 вопрос"),
+});
 
-export class CreateQuestionDto {
-  public imageFilename?: string;
-
-  public text!: string;
-
-  public timeLimit!: number;
-
-  public points!: number;
-
-  public answers!: CreateAnswerDto[];
-}
-
-export class CreateQuizDto {
-  public imageFilename?: string;
-
-  public title!: string;
-
-  public questions!: CreateQuestionDto[];
-}
+export type CreateQuizDto = z.infer<typeof CreateQuizSchema>;

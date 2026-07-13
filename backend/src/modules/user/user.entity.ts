@@ -4,8 +4,8 @@ import {
   modelOptions,
   prop,
 } from "@typegoose/typegoose";
-import { User, UserRoleEnum } from "../../shared/types/index.js";
 import { createSHA256 } from "../../shared/utils/index.js";
+import { User, UserRoleEnum } from "@infinite-quiz/common";
 
 export interface UserEntity extends defaultClasses.Base {}
 

@@ -1,12 +1,16 @@
 import { DocumentType, types } from "@typegoose/typegoose";
-import { CreateQuestionDto, CreateQuizDto } from "./dto/create-quiz.dto.js";
-import { IQuizService } from "./quiz-service.interface.js";
-import { AnswerEntity, QuestionEntity, QuizEntity } from "./quiz.entity.js";
 import { inject, injectable } from "inversify";
 import { Component } from "../../shared/types/conponent.js";
 import { ILogger } from "../../shared/libs/logger/index.js";
-import { UpdateAnswerDto, UpdateQuestionDto } from "./dto/update-quiz.dto.js";
+import { QuizEntity } from "./quiz.entity.js";
+import { IQuizService } from "./quiz-service.interface.js";
+import { CreateQuizDto, UpdateQuizDto } from "@infinite-quiz/common";
 import { DEFAULT_STATIC_QUIZ_FILE_NAME } from "../../shared/constants/default-images.js";
+import {
+  findQuestion,
+  findAnswer,
+  lastQuestion,
+} from "./utils/extract-subdoc.js";
 
 @injectable()
 export class DefaultQuizService implements IQuizService {
@@ -15,15 +19,33 @@ export class DefaultQuizService implements IQuizService {
     @inject(Component.QuizModel)
     private readonly quizModel: types.ModelType<QuizEntity>,
   ) {}
+
+  private recalculate(questions: { points: number }[]) {
+    return {
+      questionCount: questions.length,
+      pointsCount: questions.reduce((sum, q) => sum + (q.points || 0), 0),
+    };
+  }
+
   public async exists(id: string): Promise<boolean> {
     return (await this.quizModel.exists({ _id: id })) !== null;
   }
 
-  public async create(dto: CreateQuizDto): Promise<DocumentType<QuizEntity>> {
+  public async create(
+    dto: CreateQuizDto,
+    hostId: string,
+  ): Promise<DocumentType<QuizEntity>> {
+    const { questionCount, pointsCount } = this.recalculate(dto.questions);
+
     const result = await this.quizModel.create({
       ...dto,
+      hostId,
       imageFilename: dto.imageFilename ?? DEFAULT_STATIC_QUIZ_FILE_NAME,
+      questionCount,
+      pointsCount,
+      status: "draft",
     });
+
     this.logger.info(`New quiz created: ${dto.title}`);
     return result;
   }
@@ -38,16 +60,30 @@ export class DefaultQuizService implements IQuizService {
     return this.quizModel.findOne({ title }).exec();
   }
 
-  public async findAll(): Promise<DocumentType<QuizEntity>[] | null> {
-    return this.quizModel.find().exec();
+  public async findAll(): Promise<DocumentType<QuizEntity>[]> {
+    return this.quizModel.find().select("-questions").exec();
+  }
+
+  public async findByHostId(
+    hostId: string,
+  ): Promise<DocumentType<QuizEntity>[]> {
+    return this.quizModel.find({ hostId }).select("-questions").exec();
   }
 
   public async updateById(
     id: string,
-    dto: CreateQuizDto,
+    dto: UpdateQuizDto,
   ): Promise<DocumentType<QuizEntity> | null> {
+    const updateData: Record<string, unknown> = { ...dto };
+
+    if (dto.questions) {
+      const { questionCount, pointsCount } = this.recalculate(dto.questions);
+      updateData.questionCount = questionCount;
+      updateData.pointsCount = pointsCount;
+    }
+
     return this.quizModel
-      .findOneAndUpdate({ _id: id }, dto, { new: true })
+      .findOneAndUpdate({ _id: id }, updateData, { new: true })
       .exec();
   }
 
@@ -56,74 +92,110 @@ export class DefaultQuizService implements IQuizService {
     return result.deletedCount > 0;
   }
 
-  public async findByHostId(
-    hostId: string,
-  ): Promise<DocumentType<QuizEntity>[] | null> {
-    return this.quizModel.find({ hostId }).exec();
+  public async addQuestion(
+    quizId: string,
+    dto: {
+      text: string;
+      points: number;
+      timeLimit: number;
+      answers: { text: string; isCorrect: boolean }[];
+    },
+  ): Promise<DocumentType<QuizEntity> | null> {
+    return this.quizModel
+      .findOneAndUpdate(
+        { _id: quizId },
+        {
+          $push: { questions: dto },
+          $inc: { questionCount: 1, pointsCount: dto.points },
+        },
+        { new: true },
+      )
+      .exec();
   }
 
   public async updateQuestionById(
     quizId: string,
     questionId: string,
-    dto: UpdateQuestionDto,
-  ): Promise<QuestionEntity | null> {
-    const quiz = await this.quizModel
-      .findOneAndUpdate(
-        { _id: quizId, "questions._id": questionId },
-        { $set: { questions: { _id: questionId } } },
-        {
-          new: true,
-          projection: {
-            questions: { $elemMatch: { _id: questionId } },
-          },
-        },
-      )
-      .exec();
+    dto: {
+      text?: string;
+      points?: number;
+      timeLimit?: number;
+      answers?: { text: string; isCorrect: boolean }[];
+    },
+  ): Promise<DocumentType<QuizEntity> | null> {
+    const oldQuiz = await this.quizModel.findById(quizId).exec();
+    if (!oldQuiz) return null;
 
-    if (!quiz || !quiz.questions || quiz.questions.length === 0) {
-      return null;
+    const oldQuestion = findQuestion(oldQuiz, questionId);
+    const oldPoints = oldQuestion?.points ?? 0;
+    const newPoints = dto.points ?? oldPoints;
+    const pointsDiff = newPoints - oldPoints;
+
+    const setFields: Record<string, unknown> = {};
+    if (dto.text !== undefined) setFields["questions.$.text"] = dto.text;
+    if (dto.points !== undefined) setFields["questions.$.points"] = dto.points;
+    if (dto.timeLimit !== undefined)
+      setFields["questions.$.timeLimit"] = dto.timeLimit;
+    if (dto.answers !== undefined)
+      setFields["questions.$.answers"] = dto.answers;
+
+    const updateQuery: Record<string, unknown> = { $set: setFields };
+    if (pointsDiff !== 0) {
+      updateQuery.$inc = { pointsCount: pointsDiff };
     }
 
-    return quiz.questions[0];
-  }
-
-  public async addQuestion(
-    quizId: string,
-    dto: CreateQuestionDto,
-  ): Promise<QuestionEntity | null> {
-    const quiz = await this.quizModel
+    return this.quizModel
       .findOneAndUpdate(
-        { _id: quizId },
-        { $push: { questions: dto } },
-        {
-          new: true,
-        },
+        { _id: quizId, "questions._id": questionId },
+        updateQuery,
+        { new: true },
       )
       .exec();
-    return quiz?.questions[-1] ?? null;
   }
 
   public async deleteQuestionById(
     quizId: string,
     questionId: string,
   ): Promise<boolean> {
+    const quiz = await this.quizModel.findById(quizId).exec();
+    if (!quiz) return false;
+
+    const question = findQuestion(quiz, questionId);
+    if (!question) return false;
+
     const result = await this.quizModel
       .findOneAndUpdate(
         { _id: quizId },
-        { $pull: { questions: { _id: questionId } } },
+        {
+          $pull: { questions: { _id: questionId } },
+          $inc: { questionCount: -1, pointsCount: -(question.points ?? 0) },
+        },
       )
       .exec();
 
     return result !== null;
   }
 
+  public async setQuizImage(
+    quizId: string,
+    filename: string,
+  ): Promise<DocumentType<QuizEntity> | null> {
+    return this.quizModel
+      .findOneAndUpdate(
+        { _id: quizId },
+        { $set: { imageFilename: filename } },
+        { new: true },
+      )
+      .exec();
+  }
+
   public async updateAnswerById(
     quizId: string,
     questionId: string,
     answerId: string,
-    dto: UpdateAnswerDto,
-  ): Promise<AnswerEntity | null> {
-    const quiz = await this.quizModel
+    dto: { text?: string; isCorrect?: boolean },
+  ): Promise<DocumentType<QuizEntity> | null> {
+    return this.quizModel
       .findOneAndUpdate(
         {
           _id: quizId,
@@ -134,23 +206,8 @@ export class DefaultQuizService implements IQuizService {
         {
           new: true,
           arrayFilters: [{ "q._id": questionId }, { "a._id": answerId }],
-          projection: {
-            questions: {
-              $elemMatch: { _id: questionId },
-            },
-          },
         },
       )
       .exec();
-
-    if (!quiz?.questions?.length) {
-      return null;
-    }
-
-    const question = quiz.questions[0];
-    const answer = question.answers.find(
-      (a) => a._id && a._id.toString() === answerId,
-    );
-    return answer ?? null;
   }
 }

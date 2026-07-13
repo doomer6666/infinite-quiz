@@ -1,4 +1,4 @@
-import { UserRole } from "../enums/index.js";
+import { UserRole } from "../dto/user/user-role.enum";
 
 export type User = {
   name: string;

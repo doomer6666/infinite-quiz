@@ -6,3 +6,6 @@ export * from "./user/current-user.response.dto.js";
 export * from "./user/login-user.dto.js";
 export * from "./user/public-user.response.dto.js";
 export * from "./user/update-user.dto.js";
+export * from "./user/user-role.enum.js";
+export * from "./quiz/create-question.dto.js";
+export * from "./quiz/update-question-answer.dto.js";

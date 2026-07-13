@@ -1,25 +1,6 @@
-export class UpdateAnswerDto {
-  public text?: string;
+import z from "zod";
+import { CreateQuizSchema } from "./create-quiz.dto";
 
-  public isCorrect?: boolean;
-}
+export const UpdateQuizSchema = CreateQuizSchema.partial();
 
-export class UpdateQuestionDto {
-  public imageFilename?: string;
-
-  public text?: string;
-
-  public timeLimit?: number;
-
-  public points?: number;
-
-  public answers?: UpdateAnswerDto[];
-}
-
-export class UpdateQuizDto {
-  public imageFilename?: string;
-
-  public title?: string;
-
-  public questions?: UpdateQuestionDto[];
-}
+export type UpdateQuizDto = z.infer<typeof UpdateQuizSchema>;
