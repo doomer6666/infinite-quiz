@@ -3,9 +3,9 @@ import { FiMail } from "react-icons/fi";
 import PasswordInput from "../../shared/ui/components/PasswordInput/PasswordInput";
 import { type LoginUserDto, LoginUserShema } from "@infinite-quiz/common";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLoginUserMutation } from "./login.api";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useLoginUserMutation } from "@/entities/user/index";
 
 const LoginPage = () => {
   const [loginUser] = useLoginUserMutation();

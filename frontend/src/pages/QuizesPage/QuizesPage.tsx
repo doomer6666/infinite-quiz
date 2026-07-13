@@ -12,7 +12,7 @@ import {
   useGetQuizListQuery,
 } from "@/entities/quiz/index";
 import { QuizToolbar } from "@/features/quiz/filter-quizzes/ui/QuizToolbar";
-import { useMeQuery } from "@/shared/api";
+import { useMeQuery } from "@/entities/user/index";
 
 const QuizesPage = () => {
   const {

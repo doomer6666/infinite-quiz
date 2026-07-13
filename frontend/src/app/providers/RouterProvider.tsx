@@ -4,19 +4,25 @@ import InitialLayout from "../../shared/ui/layouts/InitialLayout";
 import RegistrationPage from "../../pages/RegistrationPage/RegistrationPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import QuizesPage from "../../pages/QuizesPage/QuizesPage";
+import { PublicOnlyRoute } from "./PublicOnlyRoute";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <InitialLayout />,
+    element: <PublicOnlyRoute />,
     children: [
       {
-        path: "login",
-        element: <LoginPage />,
-      },
-      {
-        path: "registration",
-        element: <RegistrationPage />,
+        path: "/",
+        element: <InitialLayout />,
+        children: [
+          {
+            path: "login",
+            element: <LoginPage />,
+          },
+          {
+            path: "registration",
+            element: <RegistrationPage />,
+          },
+        ],
       },
     ],
   },

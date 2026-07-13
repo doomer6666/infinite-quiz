@@ -6,8 +6,8 @@ import { CreateUserSchema } from "@infinite-quiz/common";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-import { useCreateUserMutation } from "./registration.api";
 import { Link, useNavigate } from "react-router-dom";
+import { useCreateUserMutation } from "@/entities/user/index";
 
 const RegisterSchema = CreateUserSchema.extend({
   confirmPassword: z.string(),

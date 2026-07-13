@@ -1,7 +1,7 @@
 import { useMeQuery } from "@/entities/user/index";
 import { Navigate, Outlet } from "react-router-dom";
 
-export const ProtectedRoute = () => {
+export const PublicOnlyRoute = () => {
   const token = localStorage.getItem("token");
   console.log(token);
   const { isLoading } = useMeQuery(undefined, {
@@ -16,8 +16,8 @@ export const ProtectedRoute = () => {
     );
   }
 
-  if (!token) {
-    return <Navigate to="/login" replace />;
+  if (token) {
+    return <Navigate to="/quizes" replace />;
   }
 
   return <Outlet />;

@@ -1,4 +1,4 @@
-import { useMeQuery } from "@/shared/api";
+import { useMeQuery } from "@/entities/user/index";
 import { MdAdd } from "react-icons/md";
 
 export const Topbar = () => {

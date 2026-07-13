@@ -5,7 +5,6 @@ import {
   type FetchArgs,
   type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import type { UserDto } from "@infinite-quiz/common";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -65,11 +64,7 @@ export const baseApi = createApi({
         method: "POST",
       }),
     }),
-    me: build.query<UserDto, void>({
-      query: () => "/users/me",
-      providesTags: ["CurrentUser"],
-    }),
   }),
 });
 
-export const { useRefreshTokenMutation, useMeQuery } = baseApi;
+export const { useRefreshTokenMutation } = baseApi;
