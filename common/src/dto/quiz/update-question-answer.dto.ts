@@ -1,7 +1,9 @@
 import z from "zod";
 import { CreateQuestionSchema } from "./create-question.dto";
 
-export const UpdateQuestionSchema = CreateQuestionSchema.partial();
+export const UpdateQuestionSchema = CreateQuestionSchema.partial().extend({
+  imageFilename: z.string().optional(),
+});
 
 export type UpdateQuestionDto = z.infer<typeof UpdateQuestionSchema>;
 
