@@ -1,1 +1,1 @@
-export * from "./model/current-user.slice";
+export * from "./api/user.api";

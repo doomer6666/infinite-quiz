@@ -1,11 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "../../shared/api";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { currentUserReducer } from "../../entities/user/index";
 
 export const store = configureStore({
   reducer: {
-    currentUser: currentUserReducer,
     [baseApi.reducerPath]: baseApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

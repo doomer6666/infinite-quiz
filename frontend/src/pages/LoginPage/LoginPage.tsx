@@ -6,15 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoginUserMutation } from "./login.api";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAppDispatch } from "../../shared/lib/hooks";
-import { setCurrentUser } from "../../entities/user/index";
 
 const LoginPage = () => {
   const [loginUser] = useLoginUserMutation();
   const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
 
-  const dispatch = useAppDispatch();
   const {
     register: login,
     handleSubmit,
@@ -25,9 +22,10 @@ const LoginPage = () => {
 
   const onSubmit = async (data: LoginUserDto) => {
     try {
-      const user = await loginUser(data).unwrap();
-      dispatch(setCurrentUser(user));
+      const { token } = await loginUser(data).unwrap();
+      localStorage.setItem("token", token);
       navigate("/quizes");
+      window.location.reload();
     } catch (error) {
       setLoginError(error.data.error);
     }

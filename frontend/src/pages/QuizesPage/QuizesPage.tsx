@@ -1,42 +1,42 @@
 import "./QuizPage.css";
 import { useState } from "react";
-import { useAppSelector } from "@/shared/lib/hooks";
 import { Sidebar } from "@/widgets/sidebar/ui/Sidebar";
 import { Topbar } from "@/widgets/topbar/ui/Topbar";
 import { ContextMenu } from "@/widgets/context-menu/ui/ContextMenu";
 import { useActivePage } from "@/shared/lib/hooks/useActivePage";
 import { useContextMenu } from "@/shared/lib/hooks/useContextMenu";
 import MobileNav from "@/widgets/mobile-nav/ui/MobileNav";
-import { QuizCard, MyQuizCard } from "@/entities/quiz/index";
-import type { Quiz } from "@/entities/quiz/index";
+import {
+  QuizCard,
+  MyQuizCard,
+  useGetQuizListQuery,
+} from "@/entities/quiz/index";
 import { QuizToolbar } from "@/features/quiz/filter-quizzes/ui/QuizToolbar";
-
-const ALL_QUIZZES: Quiz[] = [
-  {
-    id: "1",
-    image: "test",
-    category: "Наука",
-    questions: 18,
-    title: "Великие открытия в науке XX века",
-    author: { id: "user-2", name: "Мария Козлова", avatar: "МК" },
-    points: 180,
-    status: "published",
-  },
-];
+import { useMeQuery } from "@/shared/api";
 
 const QuizesPage = () => {
-  const currentUser = useAppSelector((store) => store.currentUser);
-  const currentUserId = currentUser.info?.id;
+  const {
+    data: currentUser,
+    isLoading: isUserLoading,
+    isError: isUserError,
+  } = useMeQuery();
+  const { data: quizList = [], isLoading: quizesIsLoading } =
+    useGetQuizListQuery();
 
   const { activePage, setActivePage } = useActivePage("all");
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const { visible, type, position, show, close } = useContextMenu();
 
-  const otherQuizzes = ALL_QUIZZES.filter(
-    (q) => q.author.id !== currentUserId && q.status === "published",
+  if (isUserError || !currentUser) {
+    return <div>User not found!</div>;
+  }
+
+  const currentUserId = currentUser.id;
+  const otherQuizzes = quizList.filter(
+    (q) => q.hostId !== currentUserId && q.status === "published",
   );
 
-  const myQuizzes = ALL_QUIZZES.filter((q) => q.author.id === currentUserId);
+  const myQuizzes = quizList.filter((q) => q.hostId === currentUserId);
 
   const published = myQuizzes.filter((q) => q.status === "published");
   const drafts = myQuizzes.filter((q) => q.status === "draft");
@@ -57,6 +57,9 @@ const QuizesPage = () => {
     close();
   };
 
+  if (quizesIsLoading || isUserLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="quiz-page">
       <Sidebar
@@ -78,7 +81,11 @@ const QuizesPage = () => {
             </div>
             <div className="quizzes-grid">
               {filteredOther.map((quiz) => (
-                <QuizCard key={quiz.id} quiz={quiz} onMenuClick={show} />
+                <QuizCard
+                  key={quiz._id ?? quiz.title}
+                  quiz={quiz}
+                  onMenuClick={show}
+                />
               ))}
             </div>
           </div>
@@ -90,7 +97,11 @@ const QuizesPage = () => {
             </div>
             <div className="quizzes-grid">
               {published.map((quiz) => (
-                <MyQuizCard key={quiz.id} quiz={quiz} onMenuClick={show} />
+                <MyQuizCard
+                  key={quiz._id ?? quiz.title}
+                  quiz={quiz}
+                  onMenuClick={show}
+                />
               ))}
             </div>
           </div>
@@ -104,7 +115,11 @@ const QuizesPage = () => {
             </div>
             <div className="quizzes-grid">
               {drafts.map((quiz) => (
-                <MyQuizCard key={quiz.id} quiz={quiz} onMenuClick={show} />
+                <MyQuizCard
+                  key={quiz._id ?? quiz.title}
+                  quiz={quiz}
+                  onMenuClick={show}
+                />
               ))}
             </div>
           </div>

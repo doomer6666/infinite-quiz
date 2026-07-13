@@ -5,26 +5,16 @@ import {
   type FetchArgs,
   type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import {
-  clearCurrentUser,
-  setCurrentUserInfo,
-  setToken,
-} from "../entities/user/index";
 import type { UserDto } from "@infinite-quiz/common";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
-interface StateWithToken {
-  currentUser: {
-    token: string | null;
-  };
-}
 
 const baseQuery = fetchBaseQuery({
   baseUrl,
-  prepareHeaders: (headers, { getState }) => {
+  prepareHeaders: (headers) => {
     headers.set("Content-Type", "application/json");
-    const state = getState() as StateWithToken;
-    const token = state.currentUser.token;
+
+    const token = localStorage.getItem("token");
 
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
@@ -52,13 +42,12 @@ const baseQueryWithReAuth: BaseQueryFn<
 
     if (refreshResult.data) {
       const data = refreshResult.data as { token: string };
-      const newToken = data.token;
-
-      api.dispatch(setToken(newToken));
+      localStorage.setItem("token", data.token);
 
       result = await baseQuery(args, api, extraOptions);
     } else {
-      api.dispatch(clearCurrentUser());
+      localStorage.removeItem("token");
+      window.location.href = "/login";
     }
   }
 
@@ -68,7 +57,7 @@ const baseQueryWithReAuth: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["CurrentUser"],
+  tagTypes: ["CurrentUser", "QuizList", "MyQuizList", "CurrentQuiz"],
   endpoints: (build) => ({
     refreshToken: build.mutation<{ token: string }, void>({
       query: () => ({
@@ -77,16 +66,8 @@ export const baseApi = createApi({
       }),
     }),
     me: build.query<UserDto, void>({
-      query: () => "users/me",
+      query: () => "/users/me",
       providesTags: ["CurrentUser"],
-      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setCurrentUserInfo(data));
-        } catch {
-          dispatch(clearCurrentUser());
-        }
-      },
     }),
   }),
 });

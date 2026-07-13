@@ -7,22 +7,38 @@ import {
   MdDelete,
 } from "react-icons/md";
 import type { CtxType } from "@/shared/lib/hooks/index";
-import type { Quiz } from "../model/types";
+import type { QuizDto } from "@infinite-quiz/common";
+import { useGetUserByIdQuery } from "@/entities/user/index";
 
 interface MyQuizCardProps {
-  quiz: Quiz;
+  quiz: QuizDto;
   onMenuClick: (e: React.MouseEvent, type: CtxType) => void;
 }
 
 export const MyQuizCard = ({ quiz, onMenuClick }: MyQuizCardProps) => {
-  const { image, category, questions, title, points, status } = quiz;
+  const {
+    imageFilename,
+    category,
+    questionCount,
+    title,
+    hostId,
+    pointsCount,
+    status,
+  } = quiz;
+  const { data: author, isLoading, isError } = useGetUserByIdQuery(hostId);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (isError || !author) {
+    return <div>Автор не найден</div>;
+  }
   const isDraft = status === "draft";
   const ctxType: CtxType = isDraft ? "draft" : "mine";
 
   return (
     <div className={`quiz-card ${isDraft ? "draft-card" : ""}`}>
       <div className="card-cover">
-        <img className="card-cover-img" src={image} alt="" />
+        <img className="card-cover-img" src={imageFilename} alt="" />
         <div className="card-cover-gradient" />
         <div className="card-cover-badges">
           {isDraft && (
@@ -38,7 +54,7 @@ export const MyQuizCard = ({ quiz, onMenuClick }: MyQuizCardProps) => {
         </button>
         <div className="card-cover-bottom">
           <div className="cover-stat">
-            <MdQuestionAnswer size={11} /> {questions} вопросов
+            <MdQuestionAnswer size={11} /> {questionCount} вопросов
           </div>
         </div>
       </div>
@@ -47,7 +63,7 @@ export const MyQuizCard = ({ quiz, onMenuClick }: MyQuizCardProps) => {
         <div className="card-title">{title}</div>
         <div className="card-meta">
           <div className="card-meta-item">
-            <MdStar size={13} /> {points} баллов
+            <MdStar size={13} /> {pointsCount} баллов
           </div>
         </div>
 

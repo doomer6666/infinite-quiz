@@ -1,8 +1,9 @@
-import { useAppSelector } from "@/shared/lib/hooks";
+import { useMeQuery } from "@/shared/api";
 import { MdAdd } from "react-icons/md";
 
 export const Topbar = () => {
-  const image = useAppSelector((store) => store.currentUser.info.avatar);
+  const { data } = useMeQuery();
+
   return (
     <div className="topbar">
       <div className="topbar-left"></div>
@@ -12,7 +13,7 @@ export const Topbar = () => {
           Создать квиз
         </button>
         <div className="topbar-avatar">
-          <img src={image} />
+          <img src={data?.avatar} />
         </div>
       </div>
     </div>
