@@ -10,9 +10,9 @@ const RoleSelector = ({ role, setRole }: RoleSelectorProps) => {
   return (
     <div className="role-selector">
       <button
-        className={`role-btn ${role === UserRoleEnum.memder ? "active" : ""}`}
+        className={`role-btn ${role === UserRoleEnum.member ? "active" : ""}`}
         type="button"
-        onClick={() => setRole(UserRoleEnum.memder)}
+        onClick={() => setRole(UserRoleEnum.member)}
       >
         <FiUser size={15} />
         Участник

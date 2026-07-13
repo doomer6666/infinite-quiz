@@ -1,5 +1,5 @@
 import { MdLanguage, MdPerson, MdEdit } from "react-icons/md";
-import type { PageName } from "@/shared/lib/hooks/index";
+import { PageNameEnum, type PageName } from "@/shared/lib/hooks/index";
 
 interface MobileNavProps {
   activePage: PageName;
@@ -7,9 +7,9 @@ interface MobileNavProps {
 }
 
 const NAV_ITEMS = [
-  { id: "all" as PageName, icon: <MdLanguage size={22} />, label: "Все квизы" },
-  { id: "mine" as PageName, icon: <MdPerson size={22} />, label: "Мои" },
-  { id: "drafts" as PageName, icon: <MdEdit size={22} />, label: "Черновики" },
+  { id: PageNameEnum.all, icon: <MdLanguage size={22} />, label: "Все квизы" },
+  { id: PageNameEnum.mine, icon: <MdPerson size={22} />, label: "Мои" },
+  { id: PageNameEnum.drafts, icon: <MdEdit size={22} />, label: "Черновики" },
 ];
 
 const MobileNav = ({ activePage, onNavigate }: MobileNavProps) => {

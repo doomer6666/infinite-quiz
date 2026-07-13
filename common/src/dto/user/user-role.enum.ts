@@ -1,7 +1,7 @@
 export const UserRoleEnum = {
   admin: "admin",
   host: "host",
-  memder: "memder",
+  member: "member",
 };
 
 export type UserRole = (typeof UserRoleEnum)[keyof typeof UserRoleEnum];

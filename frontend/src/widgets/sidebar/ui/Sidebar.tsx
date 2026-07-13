@@ -1,4 +1,4 @@
-import type { PageName } from "@/shared/lib/hooks/index";
+import { PageNameEnum, type PageName } from "@/shared/lib/hooks/index";
 import {
   MdLanguage,
   MdPerson,
@@ -15,43 +15,54 @@ import {
 interface SidebarProps {
   activePage: PageName;
   activeCat: string | null;
+  role: string;
   onNavigate: (page: PageName) => void;
   onFilterCat: (cat: string) => void;
 }
 
 const NAV_ITEMS = [
   {
-    id: "all" as PageName,
+    id: PageNameEnum.all,
     icon: <MdLanguage size={15} />,
     label: "Все квизы",
+    roles: ["member", "host"],
   },
   {
-    id: "mine" as PageName,
+    id: PageNameEnum.mine,
     icon: <MdPerson size={15} />,
     label: "Мои квизы",
+    roles: ["host"],
   },
   {
-    id: "drafts" as PageName,
+    id: PageNameEnum.drafts,
     icon: <MdEdit size={15} />,
     label: "Черновики",
+    roles: ["host"],
   },
 ];
 
 const CATEGORIES = [
-  { label: "Наука", icon: <MdScience size={15} /> },
-  { label: "История", icon: <MdAccessTime size={15} /> },
-  { label: "Технологии", icon: <MdDesktopMac size={15} /> },
-  { label: "География", icon: <MdPublic size={15} /> },
-  { label: "Кино", icon: <MdPlayCircle size={15} /> },
-  { label: "Спорт", icon: <MdSportsSoccer size={15} /> },
+  { label: "Наука", value: "science", icon: <MdScience size={15} /> },
+  { label: "История", value: "history", icon: <MdAccessTime size={15} /> },
+  {
+    label: "Технологии",
+    value: "technologies",
+    icon: <MdDesktopMac size={15} />,
+  },
+  { label: "География", value: "geography", icon: <MdPublic size={15} /> },
+  { label: "Кино", value: "movie", icon: <MdPlayCircle size={15} /> },
+  { label: "Спорт", value: "sports", icon: <MdSportsSoccer size={15} /> },
 ];
 
 export const Sidebar = ({
   activePage,
   activeCat,
+  role,
   onNavigate,
   onFilterCat,
 }: SidebarProps) => {
+  const visibleNav = NAV_ITEMS.filter((item) => item.roles.includes(role));
+
   return (
     <div className="side-panel">
       <div className="side-logo">
@@ -64,13 +75,12 @@ export const Sidebar = ({
           </div>
         </div>
         <div className="side-logo-text">
-          Infinite Quiz
-          <span>Квизы</span>
+          Infinite Quiz<span>Квизы</span>
         </div>
       </div>
 
       <nav className="side-nav">
-        {NAV_ITEMS.map((item) => (
+        {visibleNav.map((item) => (
           <button
             key={item.id}
             id={`nav-${item.id}`}
@@ -86,9 +96,9 @@ export const Sidebar = ({
 
         {CATEGORIES.map((cat) => (
           <button
-            key={cat.label}
-            className={`side-nav-item ${activeCat === cat.label ? "active" : ""}`}
-            onClick={() => onFilterCat(cat.label)}
+            key={cat.value}
+            className={`side-nav-item ${activeCat === cat.value ? "active" : ""}`}
+            onClick={() => onFilterCat(cat.value)}
           >
             {cat.icon}
             {cat.label}

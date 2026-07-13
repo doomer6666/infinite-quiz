@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Sidebar } from "@/widgets/sidebar/ui/Sidebar";
 import { Topbar } from "@/widgets/topbar/ui/Topbar";
 import { ContextMenu } from "@/widgets/context-menu/ui/ContextMenu";
-import { useActivePage } from "@/shared/lib/hooks/useActivePage";
+import { PageNameEnum, useActivePage } from "@/shared/lib/hooks/useActivePage";
 import { useContextMenu } from "@/shared/lib/hooks/useContextMenu";
 import MobileNav from "@/widgets/mobile-nav/ui/MobileNav";
 import {
@@ -23,7 +23,7 @@ const QuizesPage = () => {
   const { data: quizList = [], isLoading: quizesIsLoading } =
     useGetQuizListQuery();
 
-  const { activePage, setActivePage } = useActivePage("all");
+  const { activePage, setActivePage } = useActivePage(PageNameEnum.all);
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const { visible, type, position, show, close } = useContextMenu();
 
@@ -32,9 +32,7 @@ const QuizesPage = () => {
   }
 
   const currentUserId = currentUser.id;
-  const otherQuizzes = quizList.filter(
-    (q) => q.hostId !== currentUserId && q.status === "published",
-  );
+  const otherQuizzes = quizList.filter((q) => q.status === "published");
 
   const myQuizzes = quizList.filter((q) => q.hostId === currentUserId);
 
@@ -53,7 +51,7 @@ const QuizesPage = () => {
 
   const handleFilterCat = (cat: string) => {
     setActiveCat(cat);
-    setActivePage("all");
+    setActivePage(PageNameEnum.all);
     close();
   };
 
@@ -67,6 +65,7 @@ const QuizesPage = () => {
         activeCat={activeCat}
         onNavigate={handleNavigate}
         onFilterCat={handleFilterCat}
+        role={currentUser.role}
       />
 
       <div className="main-area">
