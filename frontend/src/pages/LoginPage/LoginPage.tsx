@@ -24,7 +24,7 @@ const LoginPage = () => {
     try {
       const { token } = await loginUser(data).unwrap();
       localStorage.setItem("token", token);
-      navigate("/quizes");
+      navigate("/quizzes");
       window.location.reload();
     } catch (error) {
       setLoginError(error.data.error);

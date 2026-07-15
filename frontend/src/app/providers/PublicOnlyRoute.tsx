@@ -3,7 +3,6 @@ import { Navigate, Outlet } from "react-router-dom";
 
 export const PublicOnlyRoute = () => {
   const token = localStorage.getItem("token");
-  console.log(token);
   const { isLoading } = useMeQuery(undefined, {
     skip: !token,
   });
@@ -17,7 +16,7 @@ export const PublicOnlyRoute = () => {
   }
 
   if (token) {
-    return <Navigate to="/quizes" replace />;
+    return <Navigate to="/quizzes" replace />;
   }
 
   return <Outlet />;

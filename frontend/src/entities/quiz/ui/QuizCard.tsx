@@ -17,7 +17,6 @@ export const QuizCard = ({ quiz, onMenuClick }: QuizCardProps) => {
   const { imageFilename, category, questionCount, title, hostId, pointsCount } =
     quiz;
   const { data: author, isLoading, isError } = useGetUserByIdQuery(hostId);
-  console.log(author);
 
   if (isLoading) {
     return <div>Loading...</div>;

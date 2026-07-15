@@ -1,15 +1,27 @@
 import z from "zod";
 import { QuizCategoryEnum, QuizStatusEnum } from "../../types/index";
 
+export const MongoIdSchema = z.unknown().transform((val) => {
+  if (val === null || val === undefined) return "";
+  if (
+    typeof val === "object" &&
+    "toString" in val &&
+    typeof val.toString === "function"
+  ) {
+    return val.toString();
+  }
+  return String(val);
+});
+
 export const AnswerSchema = z.object({
-  _id: z.string().optional(),
+  _id: MongoIdSchema,
   text: z.string().min(1, "Ответ не может быть пустым"),
   isCorrect: z.boolean(),
 });
 export type AnswerDto = z.infer<typeof AnswerSchema>;
 
 export const QuestionSchema = z.object({
-  _id: z.string().optional(),
+  _id: MongoIdSchema,
   text: z.string().min(1, "Вопрос не может быть пустым"),
   points: z.number().min(1),
   timeLimit: z.number().min(1),
@@ -18,7 +30,7 @@ export const QuestionSchema = z.object({
 export type QuestionDto = z.infer<typeof QuestionSchema>;
 
 export const QuizSchema = z.object({
-  _id: z.string().optional(),
+  _id: MongoIdSchema,
   hostId: z.string(),
   title: z.string(),
   imageFilename: z.string(),

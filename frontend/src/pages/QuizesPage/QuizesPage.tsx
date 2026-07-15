@@ -11,7 +11,7 @@ import {
   MyQuizCard,
   useGetQuizListQuery,
 } from "@/entities/quiz/index";
-import { QuizToolbar } from "@/features/quiz/filter-quizzes/ui/QuizToolbar";
+import { QuizToolbar } from "@/features/index";
 import { useMeQuery } from "@/entities/user/index";
 
 const QuizesPage = () => {
@@ -20,7 +20,7 @@ const QuizesPage = () => {
     isLoading: isUserLoading,
     isError: isUserError,
   } = useMeQuery();
-  const { data: quizList = [], isLoading: quizesIsLoading } =
+  const { data: quizList = [], isLoading: quizzesIsLoading } =
     useGetQuizListQuery();
 
   const { activePage, setActivePage } = useActivePage(PageNameEnum.all);
@@ -55,7 +55,7 @@ const QuizesPage = () => {
     close();
   };
 
-  if (quizesIsLoading || isUserLoading) {
+  if (quizzesIsLoading || isUserLoading) {
     return <div>Loading...</div>;
   }
   return (

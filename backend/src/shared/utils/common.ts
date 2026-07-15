@@ -5,9 +5,6 @@ import { ClassConstructor, plainToInstance } from "class-transformer";
 export const getErrorMessage = (error: unknown): string =>
   error instanceof Error ? error.message : String(error);
 
-export const fillDTO = <T, V>(someDTO: ClassConstructor<T>, plainObject: V) =>
-  plainToInstance(someDTO, plainObject, { excludeExtraneousValues: true });
-
 export const createErrorObject = (message: string) => ({
   error: message,
 });

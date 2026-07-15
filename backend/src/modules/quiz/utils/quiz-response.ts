@@ -1,33 +1,49 @@
-import { DocumentType } from "@typegoose/typegoose";
-import { QuizEntity } from "../quiz.entity.js";
+// import { DocumentType } from "@typegoose/typegoose";
+// import { QuizEntity } from "../quiz.entity.js";
 
-export function toQuizResponse(quiz: DocumentType<QuizEntity>) {
-  return {
-    id: quiz._id.toString(),
-    hostId: quiz.hostId,
-    title: quiz.title,
-    imageFilename: quiz.imageFilename,
-    questionCount: quiz.questionCount,
-    pointsCount: quiz.pointsCount,
-    status: quiz.status,
-    category: quiz.category,
-  };
-}
+// const safeId = (obj: any): string => {
+//   if (!obj) return "";
+//   if (typeof obj === "string") return obj;
+//   if (obj._id) return obj._id.toString();
+//   if (obj.id) return obj.id.toString();
+//   return obj.toString ? obj.toString() : String(obj);
+// };
 
-export function toFullQuizResponse(quiz: DocumentType<QuizEntity>) {
-  return {
-    ...toQuizResponse(quiz),
-    questions: quiz.questions.map((q) => ({
-      id: q._id.toString(),
-      text: q.text,
-      points: q.points,
-      timeLimit: q.timeLimit,
-      imageFilename: q.imageFilename,
-      answers: q.answers.map((a) => ({
-        id: a._id.toString(),
-        text: a.text,
-        isCorrect: a.isCorrect,
-      })),
-    })),
-  };
-}
+// export function toQuizResponse(quiz: DocumentType<QuizEntity>) {
+//   if (!quiz) return null;
+
+//   return {
+//     id: safeId(quiz._id || quiz.id),
+//     hostId: safeId(quiz.hostId),
+//     title: quiz.title || "",
+//     imageFilename: quiz.imageFilename || "default.png",
+//     questionCount: Number(quiz.questionCount ?? 0),
+//     pointsCount: Number(quiz.pointsCount ?? 0),
+//     status: quiz.status || "draft",
+//     category: quiz.category,
+//   };
+// }
+
+// export function toFullQuizResponse(quiz: DocumentType<QuizEntity>) {
+//   if (!quiz) return null;
+
+//   return {
+//     ...toQuizResponse(quiz),
+//     questions: Array.isArray(quiz.questions)
+//       ? quiz.questions.map((q: any) => ({
+//           id: safeId(q._id || q.id),
+//           text: q.text || "",
+//           points: Number(q.points ?? 0),
+//           timeLimit: Number(q.timeLimit ?? 0),
+//           imageFilename: q.imageFilename,
+//           answers: Array.isArray(q.answers)
+//             ? q.answers.map((a: any) => ({
+//                 id: safeId(a._id || a.id),
+//                 text: a.text || "",
+//                 isCorrect: Boolean(a.isCorrect),
+//               }))
+//             : [],
+//         }))
+//       : [],
+//   };
+// }

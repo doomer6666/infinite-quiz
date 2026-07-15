@@ -44,6 +44,24 @@ export const quizApi = baseApi.injectEndpoints({
         method: "DELETE",
       }),
     }),
+
+    uploadQuizImage: build.mutation<QuizDto, { quizId: string; file: File }>({
+      query: ({ quizId, file }) => {
+        const formData = new FormData();
+        formData.append("imageFilename", file);
+
+        return {
+          url: `/quizzes/${quizId}/image`,
+          method: "POST",
+          body: formData,
+          headers: (headers) => {
+            headers.delete("Content-Type");
+            return headers;
+          },
+        };
+      },
+      invalidatesTags: ["CurrentQuiz", "QuizList", "MyQuizList"],
+    }),
   }),
 });
 
@@ -54,4 +72,5 @@ export const {
   useCreateQuizMutation,
   useUpdateQuizMutation,
   useDeleteQuizMutation,
+  useUploadQuizImageMutation,
 } = quizApi;

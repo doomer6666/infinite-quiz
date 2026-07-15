@@ -1,11 +1,4 @@
-import {
-  Answer,
-  Question,
-  Quiz,
-  QuizCategoryEnum,
-  QuizStatusEnum,
-  type QuizStatus,
-} from "@infinite-quiz/common";
+import { Answer, Question, Quiz, type QuizStatus } from "@infinite-quiz/common";
 import {
   defaultClasses,
   getModelForClass,
@@ -74,7 +67,9 @@ export class QuizEntity extends defaultClasses.TimeStamps implements Quiz {
 
   @prop({
     type: () => String,
-    required: true,
+    required: function (this: QuizEntity) {
+      return this.status === "published";
+    },
   })
   category!: string;
 }

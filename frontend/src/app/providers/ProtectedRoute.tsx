@@ -3,7 +3,6 @@ import { Navigate, Outlet } from "react-router-dom";
 
 export const ProtectedRoute = () => {
   const token = localStorage.getItem("token");
-  console.log(token);
   const { isLoading } = useMeQuery(undefined, {
     skip: !token,
   });

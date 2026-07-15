@@ -17,11 +17,13 @@ export type QuizCategory =
   (typeof QuizCategoryEnum)[keyof typeof QuizCategoryEnum];
 
 export type Answer = {
+  _id?: string;
   text: string;
   isCorrect: boolean;
 };
 
 export type Question = {
+  _id?: string;
   text: string;
   points: number;
   timeLimit: number;
@@ -29,6 +31,7 @@ export type Question = {
 };
 
 export type Quiz = {
+  _id?: string;
   hostId: string;
   title: string;
   imageFilename: string;

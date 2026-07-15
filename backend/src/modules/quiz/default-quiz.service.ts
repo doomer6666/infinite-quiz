@@ -4,13 +4,15 @@ import { Component } from "../../shared/types/conponent.js";
 import { ILogger } from "../../shared/libs/logger/index.js";
 import { QuizEntity } from "./quiz.entity.js";
 import { IQuizService } from "./quiz-service.interface.js";
-import { CreateQuizDto, UpdateQuizDto } from "@infinite-quiz/common";
-import { DEFAULT_STATIC_QUIZ_FILE_NAME } from "../../shared/constants/default-images.js";
 import {
-  findQuestion,
-  findAnswer,
-  lastQuestion,
-} from "./utils/extract-subdoc.js";
+  CreateQuizDto,
+  PublishQuizSchema,
+  UpdateQuizDto,
+} from "@infinite-quiz/common";
+import { DEFAULT_STATIC_QUIZ_FILE_NAME } from "../../shared/constants/default-images.js";
+import { findQuestion } from "./utils/extract-subdoc.js";
+import { StatusCodes } from "http-status-codes";
+import { HttpError } from "../../shared/libs/rest/index.js";
 
 @injectable()
 export class DefaultQuizService implements IQuizService {
@@ -35,7 +37,9 @@ export class DefaultQuizService implements IQuizService {
     dto: CreateQuizDto,
     hostId: string,
   ): Promise<DocumentType<QuizEntity>> {
-    const { questionCount, pointsCount } = this.recalculate(dto.questions);
+    const { questionCount, pointsCount } = this.recalculate(
+      dto.questions ?? [],
+    );
 
     const result = await this.quizModel.create({
       ...dto,
@@ -209,5 +213,44 @@ export class DefaultQuizService implements IQuizService {
         },
       )
       .exec();
+  }
+
+  public async publish(id: string): Promise<DocumentType<QuizEntity>> {
+    const quiz = await this.quizModel.findById(id).exec();
+
+    if (!quiz) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        "Quiz not found",
+        "QuizService",
+      );
+    }
+    const validation = PublishQuizSchema.safeParse(
+      quiz.toObject({ virtuals: true }),
+    );
+
+    if (!validation.success) {
+      const formattedErrors = validation.error.issues.map((err) => ({
+        path: err.path.join("."),
+        message: err.message,
+      }));
+
+      throw new HttpError(
+        StatusCodes.UNPROCESSABLE_ENTITY,
+        "Невозможно опубликовать квиз. Черновик заполнен не полностью.",
+        "QuizService",
+      );
+    }
+
+    const publishedQuiz = await this.quizModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $set: { status: "published" } },
+        { new: true, runValidators: true },
+      )
+      .exec();
+
+    this.logger.info(`Quiz published successfully: ${quiz.title}`);
+    return publishedQuiz!;
   }
 }

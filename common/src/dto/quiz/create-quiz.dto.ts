@@ -4,7 +4,7 @@ import { QuizCategoryEnum, QuizStatusEnum } from "../../types/index";
 export const CreateQuizSchema = z.object({
   title: z.string().min(1, "Название обязательно"),
   imageFilename: z.string().optional(),
-  category: z.enum(QuizCategoryEnum),
+  category: z.enum(QuizCategoryEnum).optional(),
   status: z.enum(QuizStatusEnum),
   questions: z
     .array(
@@ -22,7 +22,7 @@ export const CreateQuizSchema = z.object({
           .min(2, "Минимум 2 варианта ответа"),
       }),
     )
-    .min(1, "Минимум 1 вопрос"),
+    .optional(),
 });
 
 export type CreateQuizDto = z.infer<typeof CreateQuizSchema>;

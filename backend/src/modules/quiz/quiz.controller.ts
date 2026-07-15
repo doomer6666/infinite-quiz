@@ -23,7 +23,6 @@ import {
   QuizWithQuestionsSchema,
   type UpdateQuizDto,
 } from "@infinite-quiz/common";
-import { toQuizResponse, toFullQuizResponse } from "./utils/quiz-response.js";
 
 @injectable()
 export class QuizController extends BaseController {
@@ -125,25 +124,40 @@ export class QuizController extends BaseController {
         ),
       ],
     });
+    this.addRoute({
+      path: "/:id/publish",
+      method: HttpMethod.Post,
+      handler: this.publish,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new DocumentExistsMiddleware(quizService, "Quiz", "id"),
+      ],
+    });
   }
 
   public async createQuiz(req: Request, res: Response) {
     const quiz = await this.quizService.create(req.body, req.tokenPayload?.id);
-    this.created(res, QuizWithQuestionsSchema.parse(toFullQuizResponse(quiz)));
+    this.created(
+      res,
+      QuizWithQuestionsSchema.parse(quiz.toObject({ virtuals: true })),
+    );
   }
 
   public async getAllQuizzes(_req: Request, res: Response) {
     const quizzes = await this.quizService.findAll();
     this.ok(
       res,
-      quizzes.map((q) => QuizSchema.parse(toQuizResponse(q))),
+      quizzes.map((q) => QuizSchema.parse(q.toObject({ virtuals: true }))),
     );
   }
 
   public async getQuizById(req: Request, res: Response) {
     const quiz = await this.quizService.findById(getId(req.params));
     if (!quiz) throw new HttpError(StatusCodes.NOT_FOUND, "Quiz not found");
-    this.ok(res, QuizWithQuestionsSchema.parse(toFullQuizResponse(quiz)));
+    this.ok(
+      res,
+      QuizWithQuestionsSchema.parse(quiz.toObject({ virtuals: true })),
+    );
   }
 
   public async updateQuiz(req: Request, res: Response) {
@@ -152,7 +166,10 @@ export class QuizController extends BaseController {
       req.body as UpdateQuizDto,
     );
     if (!quiz) throw new HttpError(StatusCodes.NOT_FOUND, "Quiz not found");
-    this.ok(res, QuizWithQuestionsSchema.parse(toFullQuizResponse(quiz)));
+    this.ok(
+      res,
+      QuizWithQuestionsSchema.parse(quiz.toObject({ virtuals: true })),
+    );
   }
 
   public async deleteQuiz(req: Request, res: Response) {
@@ -175,7 +192,7 @@ export class QuizController extends BaseController {
       file.filename,
     );
     if (!result) throw new HttpError(StatusCodes.NOT_FOUND, "Quiz not found");
-    this.created(res, QuizSchema.parse(toQuizResponse(result)));
+    this.created(res, QuizSchema.parse(result.toObject({ virtuals: true })));
   }
 
   public async uploadQuestionImage({ params, file }: Request, res: Response) {
@@ -205,7 +222,16 @@ export class QuizController extends BaseController {
     const quizzes = await this.quizService.findByHostId(hostId);
     this.ok(
       res,
-      quizzes.map((q) => QuizSchema.parse(toQuizResponse(q))),
+      quizzes.map((q) => QuizSchema.parse(q.toObject({ virtuals: true }))),
+    );
+  }
+
+  public async publish({ params }: Request, res: Response) {
+    const id = getId(params);
+    const result = await this.quizService.publish(id);
+    this.ok(
+      res,
+      QuizWithQuestionsSchema.parse(result.toObject({ virtuals: true })),
     );
   }
 }

@@ -1,18 +1,42 @@
-// export type QuizStatus = "published" | "draft";
+import type { QuizCategory } from "@infinite-quiz/common";
 
-// export interface QuizAuthor {
-//   id: string;
-//   name: string;
-//   avatar: string;
-// }
+export type QuizWizardState = {
+  title: string;
+  imageFile: File | null;
+  category: QuizCategory;
+  pointsPerQuestion: number;
+  timePerQuestion: number;
+};
+export interface StepData {
+  id: number;
+  title: string;
+  desc: string;
+  name: string;
+}
 
-// export interface Quiz {
-//   id: string;
-//   title: string;
-//   image: string;
-//   category: string;
-//   questions: number;
-//   points: number;
-//   status: QuizStatus;
-//   author: QuizAuthor;
-// }
+export const QUIZ_STEPS: StepData[] = [
+  {
+    id: 1,
+    title: "Основное",
+    desc: "Название",
+    name: "Основная информация",
+  },
+  {
+    id: 2,
+    title: "Категория",
+    desc: "Тема квиза",
+    name: "Категория квиза",
+  },
+  {
+    id: 3,
+    title: "Баллы",
+    desc: "Оценивание",
+    name: "Система баллов",
+  },
+  {
+    id: 4,
+    title: "Время",
+    desc: "Лимиты на вопрос",
+    name: "Настройка времени",
+  },
+];

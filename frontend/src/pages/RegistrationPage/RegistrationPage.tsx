@@ -73,7 +73,7 @@ const RegistrationPage = () => {
       const dto = CreateUserSchema.parse(data);
       const { token } = await createUser(dto).unwrap();
       localStorage.setItem("token", token);
-      navigate("/quizes");
+      navigate("/quizzes");
     } catch (err) {
       console.error("Ошибка создания:", err);
     }

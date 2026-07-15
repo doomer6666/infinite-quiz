@@ -40,4 +40,5 @@ export interface IQuizService {
     answerId: string,
     dto: UpdateAnswerDto,
   ): Promise<DocumentType<QuizEntity> | null>;
+  publish(id: string): Promise<DocumentType<QuizEntity>>;
 }
