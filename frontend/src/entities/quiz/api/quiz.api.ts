@@ -54,10 +54,6 @@ export const quizApi = baseApi.injectEndpoints({
           url: `/quizzes/${quizId}/image`,
           method: "POST",
           body: formData,
-          headers: (headers) => {
-            headers.delete("Content-Type");
-            return headers;
-          },
         };
       },
       invalidatesTags: ["CurrentQuiz", "QuizList", "MyQuizList"],

@@ -27,7 +27,7 @@ export const QuizCard = ({ quiz, onMenuClick }: QuizCardProps) => {
   return (
     <div className="quiz-card">
       <div className="card-cover">
-        <img className="card-cover-img" src={imageFilename} alt="" />
+        <img className="card-cover-img" src={imageFilename} alt="Аватар" />
         <div className="card-cover-gradient" />
         <div className="card-cover-badges">
           <span className="cover-badge cover-badge-cat">{category}</span>

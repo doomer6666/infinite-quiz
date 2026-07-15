@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+
 import { QuizCategoryEnum, type CreateQuizDto } from "@infinite-quiz/common";
 import {
   type QuizWizardState,
@@ -28,18 +29,24 @@ export const useQuizEditorWizard = () => {
   });
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const imageUrlRef = useRef<string | null>(null);
 
   const updateState = (patch: Partial<QuizWizardState>) => {
-    setState((prev) => {
-      const newState = { ...prev, ...patch };
-      if (patch.imageFile !== undefined) {
-        setImagePreviewUrl((prevUrl) => {
-          if (prevUrl) URL.revokeObjectURL(prevUrl);
-          return patch.imageFile ? URL.createObjectURL(patch.imageFile) : null;
-        });
+    if (patch.imageFile !== undefined) {
+      if (imageUrlRef.current) {
+        URL.revokeObjectURL(imageUrlRef.current);
       }
-      return newState;
-    });
+
+      const newUrl = patch.imageFile
+        ? URL.createObjectURL(patch.imageFile)
+        : null;
+      imageUrlRef.current = newUrl;
+
+      // Чисто обновляем стейт URL
+      setImagePreviewUrl(newUrl);
+    }
+
+    setState((prev) => ({ ...prev, ...patch }));
 
     setErrors((prev) => {
       const newErrors = { ...prev };
@@ -52,9 +59,12 @@ export const useQuizEditorWizard = () => {
 
   useEffect(() => {
     return () => {
-      if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
+      if (imageUrlRef.current) {
+        URL.revokeObjectURL(imageUrlRef.current);
+        imageUrlRef.current = null;
+      }
     };
-  }, [imagePreviewUrl]);
+  }, []);
 
   const validateStep = (stepId: number) => {
     let valid = true;
@@ -112,18 +122,20 @@ export const useQuizEditorWizard = () => {
 
   const submitWizard = async () => {
     try {
+      if (!state.category) {
+        throw new Error("Категория обязательна для создания квиза");
+      }
+
       const dto: CreateQuizDto = {
         title: state.title,
-        category: state.category!,
+        category: state.category,
         status: "draft",
         questions: [],
       };
 
       const createdQuiz = await createQuiz(dto).unwrap();
-      console.log("Ответ сервера при создании квиза:", createdQuiz);
-
       const quizId = createdQuiz._id;
-      console.log(quizId);
+
       if (state.imageFile && quizId) {
         await uploadQuizImage({ quizId, file: state.imageFile }).unwrap();
       }

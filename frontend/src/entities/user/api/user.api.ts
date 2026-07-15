@@ -25,6 +25,13 @@ export const userApi = baseApi.injectEndpoints({
         body: loginData,
       }),
     }),
+    logoutUser: build.mutation<void, string>({
+      query: (token) => ({
+        url: "/users/logout",
+        method: "POST",
+        body: token,
+      }),
+    }),
     getUserById: build.query<PublicUserDto, string>({
       query: (id) => `users/${id}`,
     }),
@@ -40,4 +47,5 @@ export const {
   useLoginUserMutation,
   useGetUserByIdQuery,
   useMeQuery,
+  useLogoutUserMutation,
 } = userApi;

@@ -11,7 +11,7 @@ import {
 } from "../../shared/libs/rest/index.js";
 import { ILogger } from "../../shared/libs/logger/index.js";
 import { Component } from "../../shared/types/index.js";
-import { IUserService, UserEntity } from "./index.js";
+import { IUserService } from "./index.js";
 import { IConfig, MainShema } from "../../shared/config/index.js";
 import { StatusCodes } from "http-status-codes";
 import { CreateUserRequest } from "./requests/create-user-request.type.js";
@@ -20,7 +20,6 @@ import { Request, Response } from "express";
 import { IAuthService } from "../auth/auth-service.interface.js";
 import { LoginUserRequest } from "./requests/login-user-request.type.js";
 import { LogoutUserRequest } from "./requests/logout-user-request.type.js";
-import { RefreshUserRequest } from "./requests/refresh-user-request.type.js";
 import { UpdateUserRequest } from "./requests/update-user-request.type.js";
 import { PathTransformer } from "../../shared/libs/rest/transform/path-transformer.js";
 import {
@@ -30,7 +29,6 @@ import {
   PublicUserShema,
   type UpdateUserDto,
 } from "@infinite-quiz/common";
-import { DocumentType } from "@typegoose/typegoose";
 
 export function userToResponse(user: {
   _id: unknown;

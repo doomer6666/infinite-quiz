@@ -1,3 +1,4 @@
+import { useLogoutUserMutation } from "@/entities/user/index";
 import { PageNameEnum, type PageName } from "@/shared/lib/hooks/index";
 import {
   MdLanguage,
@@ -11,6 +12,7 @@ import {
   MdSportsSoccer,
   MdLogout,
 } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   activePage: PageName;
@@ -62,6 +64,13 @@ export const Sidebar = ({
   onFilterCat,
 }: SidebarProps) => {
   const visibleNav = NAV_ITEMS.filter((item) => item.roles.includes(role));
+  const [logoutUser] = useLogoutUserMutation();
+  const navigate = useNavigate();
+  const onLogout = async () => {
+    await logoutUser(localStorage.getItem("token") ?? "");
+    localStorage.clear();
+    navigate("/");
+  };
 
   return (
     <div className="side-panel">
@@ -108,7 +117,7 @@ export const Sidebar = ({
         <div className="nav-spacer" />
         <div className="nav-divider" />
 
-        <button className="side-nav-item danger">
+        <button className="side-nav-item danger" onClick={onLogout}>
           <MdLogout size={15} />
           Выйти
         </button>
