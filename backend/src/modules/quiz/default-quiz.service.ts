@@ -230,14 +230,13 @@ export class DefaultQuizService implements IQuizService {
     );
 
     if (!validation.success) {
-      const formattedErrors = validation.error.issues.map((err) => ({
-        path: err.path.join("."),
-        message: err.message,
-      }));
+      const formattedErrors = validation.error.issues
+        .map((err) => `\n${err.message}`)
+        .join("\n");
 
       throw new HttpError(
         StatusCodes.UNPROCESSABLE_ENTITY,
-        "Невозможно опубликовать квиз. Черновик заполнен не полностью.",
+        `Невозможно опубликовать квиз. Черновик заполнен не полностью. ${formattedErrors}`,
         "QuizService",
       );
     }
