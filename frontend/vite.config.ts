@@ -10,6 +10,9 @@ export default defineConfig({
       "@common": path.resolve(__dirname, "../common/src"),
     },
 
-    dedupe: ["react", "react-dom", "react-router-dom"],
+    dedupe: ["react", "react-dom", "react-router-dom", "sonner"],
+  },
+  optimizeDeps: {
+    include: ["sonner"],
   },
 });

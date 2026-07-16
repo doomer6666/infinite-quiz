@@ -1,13 +1,34 @@
 import { useState, useEffect, useRef } from "react";
-
-import { QuizCategoryEnum, type CreateQuizDto } from "@infinite-quiz/common";
 import {
-  type QuizWizardState,
+  QuizCategoryEnum,
+  type CreateQuizDto,
+  type QuizCategory,
+  type UpdateQuizDto,
+} from "@infinite-quiz/common";
+import {
   useCreateQuizMutation,
+  useUpdateQuizMutation,
   useUploadQuizImageMutation,
+  type QuizWizardState,
 } from "@/entities/quiz/index";
 
-export const useQuizEditorWizard = () => {
+const safeRevoke = (url: string | null) => {
+  if (url && url.startsWith("blob:")) URL.revokeObjectURL(url);
+};
+
+export type WizardInitialData = Partial<
+  Omit<QuizWizardState, "imageFile" | "category">
+> & {
+  imagePreviewUrl?: string | null;
+  category?: QuizCategory;
+};
+
+export const useQuizEditorWizard = (
+  quizId?: string,
+  initialData?: WizardInitialData,
+) => {
+  const isEditMode = !!quizId;
+
   const [step, setStep] = useState(1);
   const [validSteps, setValidSteps] = useState<number[]>([]);
   const [errors, setErrors] = useState<
@@ -15,34 +36,34 @@ export const useQuizEditorWizard = () => {
   >({});
 
   const [createQuiz, { isLoading: isCreating }] = useCreateQuizMutation();
+  const [updateQuiz, { isLoading: isUpdating }] = useUpdateQuizMutation();
   const [uploadQuizImage, { isLoading: isUploading }] =
     useUploadQuizImageMutation();
 
-  const isSubmitting = isCreating || isUploading;
+  const isSubmitting = isCreating || isUpdating || isUploading;
 
-  const [state, setState] = useState<QuizWizardState>({
-    title: "",
+  const [state, setState] = useState<QuizWizardState>(() => ({
+    title: initialData?.title ?? "",
     imageFile: null,
-    category: QuizCategoryEnum.geography,
-    pointsPerQuestion: 10,
-    timePerQuestion: 20,
-  });
+    category: initialData?.category ?? QuizCategoryEnum.geography,
+    pointsPerQuestion: initialData?.pointsPerQuestion ?? 10,
+    timePerQuestion: initialData?.timePerQuestion ?? 20,
+  }));
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
-  const imageUrlRef = useRef<string | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(
+    initialData?.imagePreviewUrl ?? null,
+  );
+  const imageUrlRef = useRef<string | null>(
+    initialData?.imagePreviewUrl ?? null,
+  );
 
   const updateState = (patch: Partial<QuizWizardState>) => {
     if (patch.imageFile !== undefined) {
-      if (imageUrlRef.current) {
-        URL.revokeObjectURL(imageUrlRef.current);
-      }
-
+      safeRevoke(imageUrlRef.current);
       const newUrl = patch.imageFile
         ? URL.createObjectURL(patch.imageFile)
         : null;
       imageUrlRef.current = newUrl;
-
-      // Чисто обновляем стейт URL
       setImagePreviewUrl(newUrl);
     }
 
@@ -58,12 +79,7 @@ export const useQuizEditorWizard = () => {
   };
 
   useEffect(() => {
-    return () => {
-      if (imageUrlRef.current) {
-        URL.revokeObjectURL(imageUrlRef.current);
-        imageUrlRef.current = null;
-      }
-    };
+    return () => safeRevoke(imageUrlRef.current);
   }, []);
 
   const validateStep = (stepId: number) => {
@@ -75,14 +91,10 @@ export const useQuizEditorWizard = () => {
         newErrors.title = "Минимум 3 символа";
         valid = false;
       }
-      if (!state.imageFile) {
+      if (!state.imageFile && !imagePreviewUrl) {
         newErrors.imageFile = "Загрузите изображение";
         valid = false;
       }
-    }
-    if (stepId === 2 && !state.category) {
-      newErrors.category = "Выберите категорию";
-      valid = false;
     }
     if (
       stepId === 3 &&
@@ -122,33 +134,53 @@ export const useQuizEditorWizard = () => {
 
   const submitWizard = async () => {
     try {
-      if (!state.category) {
-        throw new Error("Категория обязательна для создания квиза");
+      if (isEditMode && quizId) {
+        const dto: UpdateQuizDto = {
+          title: state.title,
+          category: state.category,
+        };
+
+        await updateQuiz({ id: quizId, body: dto }).unwrap();
+
+        if (state.imageFile) {
+          await uploadQuizImage({ quizId, file: state.imageFile }).unwrap();
+        }
+
+        return {
+          quiz: { id: quizId },
+          questionDefaults: {
+            pointsPerQuestion: state.pointsPerQuestion,
+            timePerQuestion: state.timePerQuestion,
+          },
+        };
+      } else {
+        const dto: CreateQuizDto = {
+          title: state.title,
+          category: state.category,
+          status: "draft",
+          questions: [],
+        };
+
+        const createdQuiz = await createQuiz(dto).unwrap();
+        const newQuizId = createdQuiz._id;
+
+        if (state.imageFile && newQuizId) {
+          await uploadQuizImage({
+            quizId: newQuizId,
+            file: state.imageFile,
+          }).unwrap();
+        }
+
+        return {
+          quiz: createdQuiz,
+          questionDefaults: {
+            pointsPerQuestion: state.pointsPerQuestion,
+            timePerQuestion: state.timePerQuestion,
+          },
+        };
       }
-
-      const dto: CreateQuizDto = {
-        title: state.title,
-        category: state.category,
-        status: "draft",
-        questions: [],
-      };
-
-      const createdQuiz = await createQuiz(dto).unwrap();
-      const quizId = createdQuiz._id;
-
-      if (state.imageFile && quizId) {
-        await uploadQuizImage({ quizId, file: state.imageFile }).unwrap();
-      }
-
-      return {
-        quiz: createdQuiz,
-        questionDefaults: {
-          pointsPerQuestion: state.pointsPerQuestion,
-          timePerQuestion: state.timePerQuestion,
-        },
-      };
     } catch (e) {
-      console.error("Ошибка при создании квиза или загрузке изображения:", e);
+      console.error("Ошибка при сохранении квиза:", e);
       throw e;
     }
   };

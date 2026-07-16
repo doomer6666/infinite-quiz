@@ -16,16 +16,13 @@ export const quizApi = baseApi.injectEndpoints({
       query: (id) => `/quizzes/${id}`,
       providesTags: ["CurrentQuiz"],
     }),
-    getMyQuiz: build.query<QuizDto[], void>({
-      query: () => "/quizzes",
-      providesTags: ["MyQuizList"],
-    }),
     createQuiz: build.mutation<QuizWithQuestionsDto, CreateQuizDto>({
       query: (body) => ({
         url: "/quizzes",
         method: "POST",
         body,
       }),
+      invalidatesTags: ["QuizList"],
     }),
     updateQuiz: build.mutation<
       QuizWithQuestionsDto,
@@ -36,13 +33,14 @@ export const quizApi = baseApi.injectEndpoints({
         method: "PATCH",
         body,
       }),
-      invalidatesTags: ["CurrentUser"],
+      invalidatesTags: ["CurrentQuiz", "QuizList"],
     }),
     deleteQuiz: build.mutation<void, string>({
       query: (id) => ({
         url: `/quizzes/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["CurrentQuiz", "QuizList"],
     }),
 
     uploadQuizImage: build.mutation<QuizDto, { quizId: string; file: File }>({
@@ -56,17 +54,23 @@ export const quizApi = baseApi.injectEndpoints({
           body: formData,
         };
       },
-      invalidatesTags: ["CurrentQuiz", "QuizList", "MyQuizList"],
+      invalidatesTags: ["CurrentQuiz", "QuizList"],
+    }),
+    publishQuiz: build.mutation<void, string>({
+      query: (id) => ({
+        url: `/quizzes/${id}/publish`,
+        method: "POST",
+      }),
+      invalidatesTags: ["QuizList"],
     }),
   }),
 });
-
 export const {
   useGetQuizListQuery,
   useGetQuizQuery,
-  useGetMyQuizQuery,
   useCreateQuizMutation,
   useUpdateQuizMutation,
   useDeleteQuizMutation,
   useUploadQuizImageMutation,
+  usePublishQuizMutation,
 } = quizApi;

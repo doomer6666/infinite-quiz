@@ -2,30 +2,28 @@ import {
   MdQuestionAnswer,
   MdStar,
   MdPlayArrow,
-  MdMoreVert,
   MdEdit,
   MdDelete,
 } from "react-icons/md";
-import type { CtxType } from "@/shared/lib/hooks/index";
 import type { QuizDto } from "@infinite-quiz/common";
 import { useGetUserByIdQuery } from "@/entities/user/index";
+import { useNavigate } from "react-router-dom";
+import { useDeleteQuizMutation, usePublishQuizMutation } from "../api/quiz.api";
 
-interface MyQuizCardProps {
-  quiz: QuizDto;
-  onMenuClick: (e: React.MouseEvent, type: CtxType) => void;
-}
-
-export const MyQuizCard = ({ quiz, onMenuClick }: MyQuizCardProps) => {
-  const {
-    imageFilename,
-    category,
-    questionCount,
-    title,
-    hostId,
-    pointsCount,
-    status,
-  } = quiz;
+export const MyQuizCard = ({
+  _id,
+  imageFilename,
+  category,
+  questionCount,
+  title,
+  hostId,
+  pointsCount,
+  status,
+}: QuizDto) => {
   const { data: author, isLoading, isError } = useGetUserByIdQuery(hostId);
+  const nav = useNavigate();
+  const [deleteQuiz] = useDeleteQuizMutation();
+  const [publishQuiz] = usePublishQuizMutation();
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -33,8 +31,14 @@ export const MyQuizCard = ({ quiz, onMenuClick }: MyQuizCardProps) => {
     return <div>Автор не найден</div>;
   }
   const isDraft = status === "draft";
-  const ctxType: CtxType = isDraft ? "draft" : "mine";
-
+  const onPublishQuiz = async () => {
+    try {
+      await publishQuiz(_id);
+      console.log(121331);
+    } catch {
+      /* empty */
+    }
+  };
   return (
     <div className={`quiz-card ${isDraft ? "draft-card" : ""}`}>
       <div className="card-cover">
@@ -46,12 +50,6 @@ export const MyQuizCard = ({ quiz, onMenuClick }: MyQuizCardProps) => {
           )}
           <span className="cover-badge cover-badge-cat">{category}</span>
         </div>
-        <button
-          className="cover-menu-btn"
-          onClick={(e) => onMenuClick(e, ctxType)}
-        >
-          <MdMoreVert size={15} />
-        </button>
         <div className="card-cover-bottom">
           <div className="cover-stat">
             <MdQuestionAnswer size={11} /> {questionCount} вопросов
@@ -68,11 +66,16 @@ export const MyQuizCard = ({ quiz, onMenuClick }: MyQuizCardProps) => {
         </div>
 
         <div className="card-actions">
-          <button className="card-btn btn-edit">
+          <button
+            className="card-btn btn-edit"
+            onClick={() => nav(`${_id}/edit`)}
+          >
             <MdEdit size={13} /> {isDraft ? "Доработать" : "Изменить"}
           </button>
           {isDraft ? (
-            <button className="card-btn btn-pub">Опубликовать</button>
+            <button className="card-btn btn-pub" onClick={onPublishQuiz}>
+              Опубликовать
+            </button>
           ) : (
             <button className="card-btn btn-run">
               <MdPlayArrow size={13} color="white" /> Запустить
@@ -81,6 +84,7 @@ export const MyQuizCard = ({ quiz, onMenuClick }: MyQuizCardProps) => {
           <button
             className="card-btn btn-del"
             style={{ flex: 0, padding: "8px 10px" }}
+            onClick={() => deleteQuiz(_id)}
           >
             <MdDelete size={13} />
           </button>

@@ -56,7 +56,7 @@ const baseQueryWithReAuth: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["CurrentUser", "QuizList", "MyQuizList", "CurrentQuiz"],
+  tagTypes: ["CurrentUser", "QuizList", "CurrentQuiz"],
   endpoints: (build) => ({
     refreshToken: build.mutation<{ token: string }, void>({
       query: () => ({

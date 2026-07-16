@@ -80,11 +80,7 @@ const QuizesPage = () => {
             </div>
             <div className="quizzes-grid">
               {filteredOther.map((quiz) => (
-                <QuizCard
-                  key={quiz._id ?? quiz.title}
-                  quiz={quiz}
-                  onMenuClick={show}
-                />
+                <QuizCard key={quiz._id} quiz={quiz} onMenuClick={show} />
               ))}
             </div>
           </div>
@@ -96,11 +92,7 @@ const QuizesPage = () => {
             </div>
             <div className="quizzes-grid">
               {published.map((quiz) => (
-                <MyQuizCard
-                  key={quiz._id ?? quiz.title}
-                  quiz={quiz}
-                  onMenuClick={show}
-                />
+                <MyQuizCard key={quiz._id} {...quiz} />
               ))}
             </div>
           </div>
@@ -114,11 +106,7 @@ const QuizesPage = () => {
             </div>
             <div className="quizzes-grid">
               {drafts.map((quiz) => (
-                <MyQuizCard
-                  key={quiz._id ?? quiz.title}
-                  quiz={quiz}
-                  onMenuClick={show}
-                />
+                <MyQuizCard key={quiz._id} {...quiz} />
               ))}
             </div>
           </div>

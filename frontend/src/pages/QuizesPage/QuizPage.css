@@ -773,13 +773,10 @@
     box-shadow: 0 3px 10px rgba(0, 119, 255, 0.25);
 }
 
-.card-btn.btn-pub {
-    background: var(--success);
-    color: #fff;
-    border-color: var(--success);
-}
+
 
 .card-btn.btn-pub:hover {
+    color: #fff;
     background: #147a48;
     border-color: #147a48;
     box-shadow: 0 3px 10px rgba(26, 158, 92, 0.25);
