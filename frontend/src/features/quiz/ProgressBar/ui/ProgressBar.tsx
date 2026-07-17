@@ -1,5 +1,4 @@
 import { QUIZ_STEPS } from "@/entities/quiz/index";
-import React from "react";
 
 interface ProgressBarProps {
   currentStep: number;

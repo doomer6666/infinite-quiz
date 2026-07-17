@@ -1,5 +1,4 @@
 import type { QuizWizardState } from "@/entities/quiz/index";
-import React from "react";
 import { MdAccessTime, MdTimer } from "react-icons/md";
 
 interface QuizTimingProps {
@@ -8,7 +7,7 @@ interface QuizTimingProps {
   updateState: (patch: Partial<QuizWizardState>) => void;
 }
 
-const TIMES = [5, 10, 20, 30, 45, 60, 90, 120];
+const TIMES = [5, 10, 20, 30, 45, 60, 90];
 
 export const QuizTiming: React.FC<QuizTimingProps> = ({
   state,

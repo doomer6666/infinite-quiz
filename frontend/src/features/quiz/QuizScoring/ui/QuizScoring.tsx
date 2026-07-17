@@ -1,4 +1,3 @@
-import React from "react";
 import { MdStars } from "react-icons/md";
 import { BsCurrencyBitcoin } from "react-icons/bs";
 import type { QuizWizardState } from "@/entities/quiz/index";

@@ -43,7 +43,7 @@ export const QuizEditorPage: React.FC = () => {
 const WizardView: React.FC<{
   quizId?: string;
   initialData?: WizardInitialData;
-}> = ({ quizId, initialData }) => {
+}> = ({ quizId: id, initialData }) => {
   const navigate = useNavigate();
   const {
     step,
@@ -57,16 +57,16 @@ const WizardView: React.FC<{
     submitWizard,
     isSubmitting,
     imagePreviewUrl,
-  } = useQuizEditorWizard(quizId, initialData);
+  } = useQuizEditorWizard(id, initialData);
 
   const handleFinalNext = async () => {
     try {
       const result = await submitWizard();
-      navigate(`/quiz/${quizId}/questions`, {
-        state: result.questionDefaults,
+      navigate(`/quizzes/${result!.quiz._id}/questions`, {
+        state: result!.questionDefaults,
       });
-    } catch (e) {
-      console.error(e);
+    } catch {
+      /* empty */
     }
   };
 
@@ -111,9 +111,7 @@ const WizardView: React.FC<{
       1: "Далее: Категория",
       2: "Далее: Баллы",
       3: "Далее: Время",
-      4: quizId
-        ? "Сохранить и перейти к вопросам"
-        : "Готово — перейти к вопросам",
+      4: id ? "Сохранить и перейти к вопросам" : "Готово — перейти к вопросам",
     };
     return labels[step];
   };

@@ -40,3 +40,23 @@ export const QUIZ_STEPS: StepData[] = [
     name: "Настройка времени",
   },
 ];
+
+export type QuestionType = "text" | "image";
+export type AnswerMode = "single" | "multi";
+
+export interface EditorAnswer {
+  id: string;
+  text: string;
+  isCorrect: boolean;
+}
+
+export interface EditorQuestion {
+  id: string;
+  type: QuestionType;
+  answerMode: AnswerMode;
+  text: string;
+  imageUrl?: string | null;
+  answers: EditorAnswer[];
+  timeLimit: number;
+  points: number;
+}

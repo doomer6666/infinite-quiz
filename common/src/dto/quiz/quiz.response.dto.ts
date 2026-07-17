@@ -24,6 +24,7 @@ export const QuestionSchema = z.object({
   _id: MongoIdSchema,
   text: z.string().min(1, "Вопрос не может быть пустым"),
   points: z.number().min(1),
+  imageFilename: z.string().optional(),
   timeLimit: z.number().min(1),
   answers: z.array(AnswerSchema).min(2, "Минимум 2 варианта ответа"),
 });

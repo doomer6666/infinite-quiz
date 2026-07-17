@@ -1,4 +1,3 @@
-import React from "react";
 import { BsChevronLeft, BsChevronRight, BsCheck2 } from "react-icons/bs";
 
 interface NavigationActionsProps {

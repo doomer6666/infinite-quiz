@@ -1,6 +1,6 @@
-import React from "react";
 import { BsCheck2 } from "react-icons/bs";
 import { QUIZ_STEPS } from "../../../entities/quiz/model/types";
+import React from "react";
 
 interface SidebarStepsProps {
   currentStep: number;

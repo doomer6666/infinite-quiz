@@ -147,7 +147,7 @@ export const useQuizEditorWizard = (
         }
 
         return {
-          quiz: { id: quizId },
+          quiz: { _id: quizId },
           questionDefaults: {
             pointsPerQuestion: state.pointsPerQuestion,
             timePerQuestion: state.timePerQuestion,
@@ -179,9 +179,8 @@ export const useQuizEditorWizard = (
           },
         };
       }
-    } catch (e) {
-      console.error("Ошибка при сохранении квиза:", e);
-      throw e;
+    } catch {
+      /* empty */
     }
   };
 

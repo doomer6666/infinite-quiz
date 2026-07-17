@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import QuizesPage from "../../pages/QuizesPage/QuizesPage";
 import { PublicOnlyRoute } from "./PublicOnlyRoute";
 import { QuizEditorPage } from "@/pages/QuizEditorPage/index";
+import { QuizQuestionsPage } from "@/pages/QuizQuestionsPage/QuizQuestionsPage";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "/quizzes/:id/edit",
         element: <QuizEditorPage />,
+      },
+      {
+        path: "/quizzes/:id/questions",
+        element: <QuizQuestionsPage />,
       },
     ],
   },

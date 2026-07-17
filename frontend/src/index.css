@@ -1,33 +1,37 @@
- *,
- *::before,
- *::after {
-   box-sizing: border-box;
-   margin: 0;
-   padding: 0
- }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
- :root {
-   --primary: #0077FF;
-   --primary-light: #4DA3FF;
-   --primary-lighter: #99CCFF;
-   --primary-lightest: #E5F2FF;
-   --primary-dark: #0055CC;
-   --primary-darker: #003899;
-   --on-primary: #FFFFFF;
-   --surface: #FAFCFF;
-   --surface-variant: #F0F6FF;
-   --on-surface: #0A1929;
-   --on-surface-variant: #3D5A80;
-   --outline: #B0C8E8;
-   --outline-variant: #D6E8FF;
-   --error: #BA1A1A;
-   --shadow: rgba(0, 119, 255, 0.12);
-   --shadow-md: rgba(0, 119, 255, 0.18);
- }
+:root {
+  --primary: #0077ff;
+  --primary-light: #4da3ff;
+  --primary-lighter: #99ccff;
+  --primary-lightest: #e5f2ff;
+  --primary-dark: #0055cc;
+  --primary-darker: #003899;
+  --on-primary: #ffffff;
+  --surface: #fafcff;
+  --surface-variant: #f0f6ff;
+  --on-surface: #0a1929;
+  --on-surface-variant: #3d5a80;
+  --outline: #b0c8e8;
+  --outline-variant: #d6e8ff;
+  --error: #ba1a1a;
+  --shadow: rgba(0, 119, 255, 0.12);
+  --shadow-md: rgba(0, 119, 255, 0.18);
+  --error-light: #ffdad6;
+  --success: #1a9e5c;
+  --success-light: #d6f5e8;
+  --shadow: rgba(0, 119, 255, 0.1);
+}
 
- body {
-   font-family: 'Inter', sans-serif;
-   background: var(--surface);
-   min-height: 100vh;
-   overflow-x: hidden;
- }
+body {
+  font-family: "Inter", sans-serif;
+  background: var(--surface);
+  min-height: 100vh;
+  overflow-x: hidden;
+}

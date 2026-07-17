@@ -6,3 +6,4 @@ export * from "./QuizTiming/ui/QuizTiming";
 export * from "./FilterQuizzes/ui/QuizToolbar";
 export * from "./QuizCategories/ui/QuizCategories";
 export * from "./model/useQuizEditorWizard";
+export * from "./model/useQuestionsEditorWizzard";

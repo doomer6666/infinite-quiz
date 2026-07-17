@@ -21,7 +21,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   return (
     <div className="topbar">
       <div className="topbar-left">
-        <a className="back-btn" href="#">
+        <a className="back-btn" onClick={() => navigate(-1)}>
           <BsChevronLeft size={15} />
           Назад
         </a>

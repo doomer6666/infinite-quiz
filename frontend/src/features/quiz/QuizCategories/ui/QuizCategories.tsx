@@ -1,6 +1,6 @@
 import type { QuizWizardState } from "@/entities/quiz/index";
 import { type QuizCategory, QuizCategoryEnum } from "@infinite-quiz/common";
-import React from "react";
+
 import { BsCheckCircle, BsGrid3X3Gap, BsCheck2 } from "react-icons/bs";
 import {
   MdScience,
