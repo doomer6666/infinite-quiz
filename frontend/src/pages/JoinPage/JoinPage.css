@@ -1,0 +1,124 @@
+.join-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0e1a;
+}
+
+.join-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 40px;
+    width: 400px;
+    text-align: center;
+    color: white;
+}
+
+.join-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: rgba(0, 119, 255, 0.15);
+    color: #0077ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.join-card h2 {
+    margin: 0 0 8px;
+    font-size: 22px;
+}
+
+.join-subtitle {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    margin: 0 0 24px;
+}
+
+.join-input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-align: center;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    color: white;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.join-input::placeholder {
+    letter-spacing: 1px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.join-input:focus {
+    border-color: #0077ff;
+}
+
+.join-error {
+    display: block;
+    color: #f43f5e;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.join-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 16px;
+    font-size: 15px;
+    font-weight: 600;
+    background: #0077ff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.join-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.join-back {
+    margin-top: 12px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.join-code-display {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: #0077ff;
+    margin: 20px 0;
+}
+
+.join-waiting {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.join-players {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 13px;
+    margin-top: 8px;
+}

@@ -7,6 +7,8 @@ import QuizesPage from "../../pages/QuizesPage/QuizesPage";
 import { PublicOnlyRoute } from "./PublicOnlyRoute";
 import { QuizEditorPage } from "@/pages/QuizEditorPage/index";
 import { QuizQuestionsPage } from "@/pages/QuizQuestionsPage/QuizQuestionsPage";
+import JoinPage from "@/pages/JoinPage/JoinPage";
+import GameLobbyPage from "@/pages/GameLobbyPage/GameLobbyPage";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +48,14 @@ const router = createBrowserRouter([
       {
         path: "/quizzes/:id/questions",
         element: <QuizQuestionsPage />,
+      },
+      {
+        path: "/quizzes/:id/start",
+        element: <GameLobbyPage />,
+      },
+      {
+        path: "/join",
+        element: <JoinPage />,
       },
     ],
   },

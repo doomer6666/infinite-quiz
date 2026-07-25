@@ -11,4 +11,6 @@ export const Component = {
   QuizController: Symbol.for("QuizController"),
   AuthService: Symbol.for("AuthService"),
   PathTransformer: Symbol.for("PathTransformer"),
+  GameRoomManager: Symbol.for("GameRoomManager"),
+  GameGateway: Symbol.for("GameGateway"),
 } as const;

@@ -14,11 +14,13 @@ import { StatusCodes } from "http-status-codes";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+import http from "http";
+import { GameGateway } from "../modules/game/game.gateway.js";
 
 @injectable()
 export class MainApplication {
   private server: Express;
-
+  private httpServer: http.Server;
   constructor(
     @inject(Component.Logger) private readonly logger: ILogger,
     @inject(Component.Config) private readonly config: IConfig<MainShema>,
@@ -28,8 +30,10 @@ export class MainApplication {
     private readonly userController: IController,
     @inject(Component.QuizController)
     private readonly quizController: IController,
+    @inject(Component.GameGateway) private readonly gameGateway: GameGateway,
   ) {
     this.server = express();
+    this.httpServer = http.createServer(this.server);
   }
 
   public async init() {
@@ -52,10 +56,10 @@ export class MainApplication {
     this._initExceptionFilter();
     this.logger.info("Exception filter initialization completed");
 
-    this.logger.info("Init express server...");
+    this.logger.info("Init express & http servers...");
     await this._initServer();
     this.logger.info(
-      `Server started on http://localhost:${this.config.get("PORT")}`,
+      `Servers started on http://localhost:${this.config.get("PORT")}`,
     );
   }
 
@@ -74,7 +78,9 @@ export class MainApplication {
 
   private async _initServer() {
     const port = this.config.get("PORT");
-    this.server.listen(port);
+
+    this.gameGateway.init(this.httpServer);
+    this.httpServer.listen(port);
   }
 
   private async _intiControllers() {
@@ -102,7 +108,10 @@ export class MainApplication {
     this.server.use("/uploads", express.static(uploadsPath));
 
     this.server.use(express.json());
-    this.server.use(parseTokenMiddleware.execute.bind(parseTokenMiddleware));
+    this.server.use((req, _res, next) => {
+      if (req.path.startsWith("/socket.io")) return next();
+      parseTokenMiddleware.execute(req, _res, next);
+    });
   }
 
   private _initExceptionFilter() {
