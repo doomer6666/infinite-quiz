@@ -457,10 +457,7 @@
 }
 
 .status-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap
+    color: #FFFFFF;
 }
 
 .status-pill {
@@ -544,8 +541,6 @@
 }
 
 .bottom-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: 20px;
     flex: 1;
 }

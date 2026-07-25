@@ -35,10 +35,6 @@ export function LobbyTopbar({ status, onStart, onCancel }: Props) {
       </div>
 
       <div className="topbar-right">
-        <button className="tb-btn">
-          <FiHelpCircle size={14} />
-          Справка
-        </button>
         <button className="tb-btn tb-btn-start" onClick={onStart}>
           <FiPlay size={14} />
           Начать квиз

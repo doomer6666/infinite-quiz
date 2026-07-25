@@ -1,15 +1,18 @@
-import { FiFileText, FiSettings } from "react-icons/fi";
+import { useGetQuizQuery } from "@/entities/quiz/index";
+import { FiFileText } from "react-icons/fi";
+import { useParams } from "react-router-dom";
 
 export function QuizInfo() {
-  const quiz = {
-    title: "Великие открытия в науке",
-    questionCount: 18,
-    timePerQuestion: 20,
-    pointsPerQuestion: 10,
-    category: "Наука, История",
-  };
+  const { id } = useParams<{ id: string }>();
+  const { data: quiz } = useGetQuizQuery(id!);
+  if (!quiz) return;
 
-  const duration = Math.round((quiz.questionCount * quiz.timePerQuestion) / 60);
+  const duration = Math.round(
+    (quiz.questionCount *
+      // eslint-disable-next-line no-useless-assignment
+      quiz.questions.reduce((total, q) => (total += q.points), 0)) /
+      60,
+  );
 
   return (
     <div className="bottom-row">
@@ -29,12 +32,12 @@ export function QuizInfo() {
             <div className="detail-label">Вопросов</div>
           </div>
           <div className="detail-item">
-            <div className="detail-val">{quiz.timePerQuestion} с</div>
+            <div className="detail-val">~{quiz.questions[0].points} с</div>
             <div className="detail-label">На вопрос</div>
           </div>
           <div className="detail-item">
-            <div className="detail-val">{quiz.pointsPerQuestion}</div>
-            <div className="detail-label">Баллов / вопрос</div>
+            <div className="detail-val">{quiz.pointsCount}</div>
+            <div className="detail-label">Баллов за вопрос</div>
           </div>
           <div className="detail-item">
             <div className="detail-val">~{duration} м</div>

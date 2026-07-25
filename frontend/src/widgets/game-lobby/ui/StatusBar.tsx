@@ -1,5 +1,7 @@
-import { FiPlay, FiWifi } from "react-icons/fi";
+import { FiPlay } from "react-icons/fi";
 import type { Player } from "@infinite-quiz/common";
+import { useGetQuizQuery } from "@/entities/quiz/index";
+import { useParams } from "react-router-dom";
 
 interface Props {
   players: Player[];
@@ -8,19 +10,13 @@ interface Props {
 
 export function StatusBar({ players, onStart }: Props) {
   const count = players.length;
-
+  const { id } = useParams<{ id: string }>();
+  const { data: quiz } = useGetQuizQuery(id!);
+  if (!quiz) return;
   return (
     <div className="status-bar">
       <div className="status-left">
-        <div className="status-pill pill-waiting">
-          <div className="pill-dot" />
-          Ожидание участников
-        </div>
-        <div className="status-pill pill-online">
-          <div className="pill-dot" />
-          <FiWifi size={12} />
-          {count} онлайн
-        </div>
+        <h1>{quiz.title}</h1>
       </div>
       <div className="status-right">
         <button
