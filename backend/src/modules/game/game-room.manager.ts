@@ -114,7 +114,12 @@ export class GameRoomManager {
   ): GameState | undefined {
     const room = this.roomState.get(code);
 
-    if (!room || room.status !== "QUESTION_ANSWERING") return undefined;
+    if (
+      !room ||
+      (room.status !== "QUESTION_ANSWERING" && room.status !== "QUESTION_SHOW")
+    )
+      return undefined;
+
     if (room.currentAnswers.some((a) => a.playerId === playerId)) return room;
 
     const question = room.questions[room.currentQuestionIndex];

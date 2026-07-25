@@ -45,3 +45,12 @@ export interface GameState {
   timer: ReturnType<typeof setTimeout> | null;
   timerEndsAt: number | null;
 }
+
+export interface GameResults {
+  scores: Record<string, number>;
+  leaderboard: Player[];
+}
+
+export interface GameEndData {
+  leaderboard: Player[];
+}

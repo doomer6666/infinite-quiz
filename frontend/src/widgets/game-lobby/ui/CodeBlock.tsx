@@ -13,7 +13,7 @@ export function CodeBlock({ code }: Props) {
   const digits = (code ?? "----").split("");
 
   const copyLink = () => {
-    navigator.clipboard.writeText(`${JOIN_URL}?code=${code}`);
+    navigator.clipboard.writeText(digits.join(""));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -38,10 +38,10 @@ export function CodeBlock({ code }: Props) {
           <span className="code-url-icon">
             <FiGlobe size={14} />
           </span>
-          <span className="code-url-text">infinitequiz.ru/join</span>
+          <span className="code-url-text">{digits.join("")}</span>
           <button className="copy-btn" onClick={copyLink}>
             <FiCopy size={12} />
-            {copied ? "Скопировано!" : "Скопировать ссылку"}
+            {copied ? "Скопировано!" : "Скопировать код"}
           </button>
         </div>
 

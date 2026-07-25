@@ -58,20 +58,32 @@ export class GameGateway {
         hostId: data.hostId,
         hostSocketId: socket.id,
         questions: quiz.questions.map((q) => ({
-          id: q._id.toString(),
+          _id: q._id.toString(),
           text: q.text,
           points: q.points,
           timeLimit: q.timeLimit,
           answers: q.answers.map((a) => ({
-            id: a._id.toString(),
+            _id: a._id.toString(),
             text: a.text,
             isCorrect: a.isCorrect,
           })),
         })),
       });
 
+      const user = await this.userService.findById(data.hostId);
+      if (user) {
+        this.manager.addPlayer(room.code, {
+          _id: user._id.toString(),
+          name: user.name,
+          avatar: user.avatar,
+          score: 0,
+          socketId: socket.id,
+        });
+      }
+
       socket.join(room.code);
       socket.emit("game:created", { code: room.code });
+      this.broadcastPlayers(room.code);
     });
 
     socket.on("game:join", async (data) => {
@@ -108,6 +120,7 @@ export class GameGateway {
     });
 
     socket.on("game:show-question", (data) => {
+      this.logger.info("game:show-question received:", data);
       if (!this.isHost(socket.id, data.code)) return;
 
       const room = this.manager.nextQuestion(data.code);
@@ -122,14 +135,26 @@ export class GameGateway {
         return;
       }
 
-      this.manager.setStatus(data.code, "QUESTION_SHOW");
       const question = room.questions[room.currentQuestionIndex];
 
+      this.manager.setStatus(data.code, "QUESTION_ANSWERING");
+      this.manager.startTimer(data.code, question.timeLimit, () => {
+        this.onTimeUp(data.code);
+      });
+
+      this.io
+        .to(data.code)
+        .emit("game:status", { status: "QUESTION_ANSWERING" });
       this.io.to(data.code).emit("game:question", {
         question,
         index: room.currentQuestionIndex,
         total: room.questions.length,
       });
+      this.io.to(data.code).emit("game:answering", {
+        timeLimit: question.timeLimit,
+        endsAt: room.timerEndsAt!,
+      });
+      this.broadcastPlayers(data.code);
     });
 
     socket.on("game:start-answering", (data) => {
@@ -139,6 +164,10 @@ export class GameGateway {
       if (!room) return;
 
       this.manager.setStatus(data.code, "QUESTION_ANSWERING");
+      this.io
+        .to(data.code)
+        .emit("game:status", { status: "QUESTION_ANSWERING" });
+
       const question = room.questions[room.currentQuestionIndex];
 
       this.manager.startTimer(data.code, question.timeLimit, () => {
@@ -196,7 +225,7 @@ export class GameGateway {
     if (!room) return;
 
     const players = Array.from(room.players.values()).map((p) => ({
-      id: p._id,
+      _id: p._id,
       name: p.name,
       avatar: p.avatar,
       score: p.score,
@@ -207,6 +236,7 @@ export class GameGateway {
 
   private onTimeUp(code: string) {
     this.manager.setStatus(code, "QUESTION_RESULTS");
+    this.io.to(code).emit("game:status", { status: "QUESTION_RESULTS" });
 
     const room = this.manager.getRoom(code);
     if (!room) return;
@@ -235,19 +265,30 @@ export class GameGateway {
     if (room.currentQuestionIndex >= room.questions.length) {
       this.manager.clearTimer(code);
       this.manager.setStatus(code, "GAME_END");
+      this.io.to(code).emit("game:status", { status: "GAME_END" });
       this.io.to(code).emit("game:end", {
         leaderboard: this.manager.getLeaderboard(code)!,
       });
       return;
     }
 
-    this.manager.setStatus(code, "QUESTION_SHOW");
     const question = room.questions[room.currentQuestionIndex];
 
+    this.manager.setStatus(code, "QUESTION_ANSWERING");
+    this.manager.startTimer(code, question.timeLimit, () => {
+      this.onTimeUp(code);
+    });
+
+    this.io.to(code).emit("game:status", { status: "QUESTION_ANSWERING" });
     this.io.to(code).emit("game:question", {
       question,
       index: room.currentQuestionIndex,
       total: room.questions.length,
     });
+    this.io.to(code).emit("game:answering", {
+      timeLimit: question.timeLimit,
+      endsAt: room.timerEndsAt!,
+    });
+    this.broadcastPlayers(code);
   }
 }

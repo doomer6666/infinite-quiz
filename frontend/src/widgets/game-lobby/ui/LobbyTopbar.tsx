@@ -1,4 +1,4 @@
-import { FiHelpCircle, FiPlay, FiX } from "react-icons/fi";
+import { FiPlay, FiX } from "react-icons/fi";
 import { HiCube } from "react-icons/hi2";
 import type { GameStatus } from "@infinite-quiz/common";
 

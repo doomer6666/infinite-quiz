@@ -1,4 +1,4 @@
-import { GameStatus, Player } from "./game.type";
+import { GameEndData, GameResults, GameStatus, Player } from "./game.type";
 import { Question } from "./quiz.type";
 
 export interface ClientToServerEvents {
@@ -36,11 +36,8 @@ export interface ServerToClientEvents {
   }) => void;
   "game:answering": (data: { timeLimit: number; endsAt: number }) => void;
   "game:answer-accepted": () => void;
-  "game:results": (data: {
-    scores: Record<string, number>;
-    leaderboard: Player[];
-  }) => void;
-  "game:end": (data: { leaderboard: Player[] }) => void;
+  "game:results": (data: GameResults) => void;
+  "game:end": (data: GameEndData) => void;
   "game:destroyed": (data: { reason: string }) => void;
   error: (data: { message: string }) => void;
 }

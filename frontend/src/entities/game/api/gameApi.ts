@@ -12,7 +12,11 @@ export const gameApi = {
 
   start: (code: string) => socket.emit("game:start", { code }),
 
-  showQuestion: (code: string) => socket.emit("game:show-question", { code }),
+  showQuestion: (code: string) => {
+    console.log("Emitting game:show-question:", code);
+    console.log("Socket connected:", socket.connected);
+    socket.emit("game:show-question", { code });
+  },
 
   startAnswering: (code: string) =>
     socket.emit("game:start-answering", { code }),

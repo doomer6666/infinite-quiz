@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./GameLobbyPage.css";
 import { gameApi } from "@/entities/game/api/gameApi";
@@ -16,12 +16,15 @@ export default function GameLobbyPage() {
   const navigate = useNavigate();
   const { data: user } = useMeQuery();
   const { code, status, players } = useGame();
+  const hasCreatedRef = useRef(false);
 
   useEffect(() => {
     if (!user || !id || code) return;
 
     const tryCreate = () => {
-      console.log("Creating game:", { id, userId: user.id });
+      if (hasCreatedRef.current) return;
+      hasCreatedRef.current = true;
+      console.log("Creating game ONCE");
       gameApi.create(id, user.id);
     };
 
@@ -33,7 +36,10 @@ export default function GameLobbyPage() {
   }, [user, id, code]);
 
   const handleStart = () => {
-    if (code) gameApi.start(code);
+    if (code) {
+      gameApi.start(code);
+      navigate(`/game/${code}`);
+    }
   };
 
   const handleCancel = () => {

@@ -9,6 +9,7 @@ import { QuizEditorPage } from "@/pages/QuizEditorPage/index";
 import { QuizQuestionsPage } from "@/pages/QuizQuestionsPage/QuizQuestionsPage";
 import JoinPage from "@/pages/JoinPage/JoinPage";
 import GameLobbyPage from "@/pages/GameLobbyPage/GameLobbyPage";
+import GamePage from "@/pages/GamePage/GamePage";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: "/join",
         element: <JoinPage />,
+      },
+      {
+        path: "/game/:code",
+        element: <GamePage />,
       },
     ],
   },

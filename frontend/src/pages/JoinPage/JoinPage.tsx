@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { gameApi } from "@/entities/game/api/gameApi";
 import { useMeQuery } from "@/entities/user";
@@ -32,6 +32,12 @@ export default function JoinPage() {
 
   socket.on("error", (data) => {
     setError(data.message);
+  });
+
+  useEffect(() => {
+    if (code && status !== "LOBBY") {
+      navigate(`/game/${code}`);
+    }
   });
 
   if (code && status === "LOBBY") {
