@@ -2,7 +2,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #0a0e1a;
+    background: var(--primary-dark);
     position: relative;
     overflow: hidden;
 }

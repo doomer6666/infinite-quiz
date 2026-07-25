@@ -8,7 +8,6 @@ interface Props {
   totalPlayers: number;
   isLast: boolean;
   onNext: () => void;
-  onEnd: () => void;
 }
 
 export function GameFooter({
@@ -18,7 +17,6 @@ export function GameFooter({
   totalPlayers,
   isLast,
   onNext,
-  onEnd,
 }: Props) {
   if (!isHost) return null;
 
@@ -49,7 +47,7 @@ export function GameFooter({
           </button>
         )}
         {isResults && isLast && (
-          <button className="f-btn f-btn-next" onClick={onEnd}>
+          <button className="f-btn f-btn-next" onClick={onNext}>
             <FiCheck size={14} /> Завершить
           </button>
         )}

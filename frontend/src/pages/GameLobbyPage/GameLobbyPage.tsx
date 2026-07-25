@@ -20,7 +20,7 @@ export default function GameLobbyPage() {
 
   useEffect(() => {
     if (!user || !id || code) return;
-
+    localStorage.setItem("quizId", id);
     const tryCreate = () => {
       if (hasCreatedRef.current) return;
       hasCreatedRef.current = true;

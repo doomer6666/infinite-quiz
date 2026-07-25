@@ -10,18 +10,25 @@ import { ProgressDots } from "@/widgets/game/ui/ProgressDots";
 import { GameEndScreen } from "@/widgets/game/ui/GameEndScreen";
 import { useEffect, useRef } from "react";
 import { socket } from "@/shared/index";
+import { useGetQuizQuery } from "@/entities/quiz/index";
 
 export default function GamePage() {
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
   const { data: user } = useMeQuery();
+  const id = localStorage.getItem("quizId");
+  const { data: quiz } = useGetQuizQuery(id!);
+
   const { status, question, timeLeft, players, results, answered } = useGame();
 
   const role = localStorage.getItem("gameRole") ?? "player";
   const isHost = role === "host";
   const hasStartedRef = useRef(false);
 
-  const handleNext = () => code && gameApi.nextQuestion(code);
+  const handleNext = () => {
+    if (code) gameApi.nextQuestion(code);
+  };
+
   const handleEnd = () => navigate("/quizzes");
   const handleSubmitAnswer = (answerId: string) => {
     if (code && user) gameApi.submitAnswer(code, answerId, user.id);
@@ -49,8 +56,15 @@ export default function GamePage() {
   }, [isHost, code]);
 
   if (status === "GAME_END" && results) {
+    console.log("GamePage status:", status, "results:", results);
+
     return (
-      <GameEndScreen leaderboard={results.leaderboard} onEnd={handleEnd} />
+      <GameEndScreen
+        leaderboard={results.leaderboard}
+        onEnd={handleEnd}
+        questionCount={question?.total}
+        quizTitle={quiz?.title}
+      />
     );
   }
 
@@ -97,7 +111,6 @@ export default function GamePage() {
         totalPlayers={players.length}
         isLast={question.index >= question.total - 1}
         onNext={handleNext}
-        onEnd={handleEnd}
       />
     </div>
   );
