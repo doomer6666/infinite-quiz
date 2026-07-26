@@ -78,7 +78,7 @@ infinite-quiz/
 ### 1. Клонирование и установка
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/doomer6666/infinite-quiz
 cd infinite-quiz
 npm install
 ```
