@@ -38,7 +38,9 @@ export function GameEndScreen({
   );
   const getAvatarUrl = (avatar: string) => {
     if (avatar.startsWith("http")) return avatar;
-    return `http://localhost:4010/static/${avatar}`;
+    return avatar.length > 12
+      ? `http://localhost:4010/uploads/${avatar}`
+      : `http://localhost:4010/static/${avatar}`;
   };
 
   const top3 = sorted.slice(0, 3);

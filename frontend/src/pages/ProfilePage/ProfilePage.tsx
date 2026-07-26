@@ -389,6 +389,70 @@ export default function ProfilePage() {
             </div>
           </div>
         )}
+        {activeTab === "history" && (
+          <div className="tab-content active">
+            <div className="tab-scroll">
+              <div className="section-title">История игр</div>
+              <div className="history-list">
+                {history.length === 0 ? (
+                  <p className="history-empty">Пока нет игр</p>
+                ) : (
+                  history.map((game) => {
+                    const me = game.players.find((p) => p.userId === user?.id);
+                    const place = me?.place ?? 0;
+                    const placeClass =
+                      place === 1
+                        ? "p1"
+                        : place === 2
+                          ? "p2"
+                          : place === 3
+                            ? "p3"
+                            : "pN";
+                    const iconClass =
+                      place === 1 ? "win" : place <= 3 ? "mid" : "low";
+                    const isMyHosted = game.hostId === user?.id;
+
+                    return (
+                      <div key={game._id} className="history-item">
+                        <div className={`history-icon ${iconClass}`}>
+                          <FiStar size={17} />
+                        </div>
+                        <div className="history-info">
+                          <div className="history-name">{game.quizTitle}</div>
+                          <div className="history-meta">
+                            {new Date(game.playedAt).toLocaleDateString(
+                              "ru-RU",
+                            )}{" "}
+                            · {game.players.length} участников
+                          </div>
+                        </div>
+                        <div className="history-result">
+                          {isMyHosted ? (
+                            <>
+                              <div className="history-score">
+                                {game.players.length} уч.
+                              </div>
+                              <div className="history-place pN">хост</div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="history-score">
+                                {me?.score ?? 0} б.
+                              </div>
+                              <div className={`history-place ${placeClass}`}>
+                                {place} место
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {showDeleteModal && (
