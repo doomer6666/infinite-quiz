@@ -117,7 +117,7 @@ const WizardView: React.FC<{
   };
 
   return (
-    <>
+    <div className="edit-page">
       <TopBar
         isHasTittle={state.title.length > 0}
         submitWizard={submitWizard}
@@ -142,6 +142,6 @@ const WizardView: React.FC<{
         </div>
         <RightPanel state={state} imagePreviewUrl={imagePreviewUrl} />
       </div>
-    </>
+    </div>
   );
 };

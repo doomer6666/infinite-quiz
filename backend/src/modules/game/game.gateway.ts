@@ -11,6 +11,7 @@ import {
   Player,
   ServerToClientEvents,
 } from "@infinite-quiz/common";
+import { IGameHistoryService } from "../game-history/index.js";
 
 type TypedSocket = Socket<ClientToServerEvents, ServerToClientEvents>;
 type TypedServer = Server<ClientToServerEvents, ServerToClientEvents>;
@@ -25,6 +26,8 @@ export class GameGateway {
     private readonly manager: GameRoomManager,
     @inject(Component.QuizService) private quizService: IQuizService,
     @inject(Component.UserService) private userService: IUserService,
+    @inject(Component.GameHistoryService)
+    private gameHistoryService: IGameHistoryService,
   ) {}
 
   public init(httpServer: http.Server) {
@@ -129,9 +132,15 @@ export class GameGateway {
       if (room.currentQuestionIndex >= room.questions.length) {
         this.manager.clearTimer(data.code);
         this.manager.setStatus(data.code, "GAME_END");
+        this.io.to(data.code).emit("game:status", { status: "GAME_END" });
         this.io.to(data.code).emit("game:end", {
           leaderboard: this.manager.getLeaderboard(data.code)!,
         });
+
+        this.saveGameHistory(data.code).catch((err) => {
+          this.logger.error(`Failed to save game history`, err);
+        });
+
         return;
       }
 
@@ -182,7 +191,7 @@ export class GameGateway {
 
     socket.on("game:next", (data) => {
       if (!this.isHost(socket.id, data.code)) return;
-      this.handleShowQuestion(socket, data.code);
+      this.handleShowQuestion(data.code);
     });
 
     socket.on("game:answer", (data) => {
@@ -258,7 +267,7 @@ export class GameGateway {
     return scores;
   }
 
-  private handleShowQuestion(socket: TypedSocket, code: string) {
+  private handleShowQuestion(code: string) {
     const room = this.manager.nextQuestion(code);
     if (!room) return;
 
@@ -268,6 +277,10 @@ export class GameGateway {
       this.io.to(code).emit("game:status", { status: "GAME_END" });
       this.io.to(code).emit("game:end", {
         leaderboard: this.manager.getLeaderboard(code)!,
+      });
+
+      this.saveGameHistory(code).catch((err) => {
+        this.logger.error(`Failed to save game history`, err);
       });
       return;
     }
@@ -290,5 +303,46 @@ export class GameGateway {
       endsAt: room.timerEndsAt!,
     });
     this.broadcastPlayers(code);
+  }
+
+  private async saveGameHistory(code: string) {
+    const room = this.manager.getRoom(code);
+    if (!room) return;
+
+    const leaderboard = this.manager.getLeaderboard(code);
+    if (!leaderboard || leaderboard.length === 0) return;
+
+    const quiz = await this.quizService.findById(room.quizId);
+    const host = await this.userService.findById(room.hostId);
+
+    if (!quiz || !host) return;
+
+    const players = leaderboard.map((p, i) => ({
+      userId: p._id,
+      name: p.name,
+      avatar: p.avatar,
+      score: p.score,
+      place: i + 1,
+    }));
+
+    const totalPoints = players.reduce((sum, p) => sum + p.score, 0);
+
+    const duration = Math.round(
+      (Date.now() - new Date(room.createdAt || Date.now()).getTime()) / 1000,
+    );
+
+    await this.gameHistoryService.create({
+      quizId: room.quizId,
+      quizTitle: quiz.title,
+      hostId: room.hostId,
+      hostName: host.name,
+      players,
+      questionCount: room.questions.length,
+      totalPoints,
+      duration,
+      playedAt: new Date().toISOString(),
+    });
+
+    this.logger.info(`Game history saved for room ${code}`);
   }
 }

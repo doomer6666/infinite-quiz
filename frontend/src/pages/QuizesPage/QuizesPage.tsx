@@ -25,7 +25,7 @@ const QuizesPage = () => {
 
   const { activePage, setActivePage } = useActivePage(PageNameEnum.all);
   const [activeCat, setActiveCat] = useState<string | null>(null);
-  const { visible, type, position, show, close } = useContextMenu();
+  const { visible, type, position, close } = useContextMenu();
 
   if (isUserError || !currentUser) {
     return <div>User not found!</div>;
@@ -80,7 +80,7 @@ const QuizesPage = () => {
             </div>
             <div className="quizzes-grid">
               {filteredOther.map((quiz) => (
-                <QuizCard key={quiz._id} quiz={quiz} onMenuClick={show} />
+                <QuizCard key={quiz._id} quiz={quiz} />
               ))}
             </div>
           </div>

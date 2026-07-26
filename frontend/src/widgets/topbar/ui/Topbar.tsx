@@ -16,9 +16,11 @@ export const Topbar = () => {
             Создать квиз
           </Link>
         )}
-        <div className="topbar-avatar">
-          <img src={data?.avatar} />
-        </div>
+        <Link to="/profile">
+          <div className="topbar-avatar">
+            <img src={data?.avatar} />
+          </div>
+        </Link>
       </div>
     </div>
   );

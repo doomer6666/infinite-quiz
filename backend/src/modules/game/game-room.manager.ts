@@ -31,6 +31,7 @@ export class GameRoomManager {
       currentAnswers: [],
       timer: null,
       timerEndsAt: null,
+      createdAt: new Date(),
     };
 
     this.roomState.set(code, state);

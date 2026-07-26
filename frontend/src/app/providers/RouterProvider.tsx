@@ -10,6 +10,7 @@ import { QuizQuestionsPage } from "@/pages/QuizQuestionsPage/QuizQuestionsPage";
 import JoinPage from "@/pages/JoinPage/JoinPage";
 import GameLobbyPage from "@/pages/GameLobbyPage/GameLobbyPage";
 import GamePage from "@/pages/GamePage/GamePage";
+import ProfilePage from "@/pages/ProfilePage/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: "/game/:code",
         element: <GamePage />,
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />,
       },
     ],
   },

@@ -3,6 +3,7 @@ import type {
   CreateUserDto,
   LoginUserDto,
   PublicUserDto,
+  UpdateUserDto,
   UserDto,
   UserWithTokenDto,
 } from "@infinite-quiz/common";
@@ -39,6 +40,31 @@ export const userApi = baseApi.injectEndpoints({
       query: () => "/users/me",
       providesTags: ["CurrentUser"],
     }),
+
+    updateUser: build.mutation<
+      PublicUserDto,
+      { id: string; data: UpdateUserDto }
+    >({
+      query: ({ id, data }) => ({
+        url: `/users/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["CurrentUser"],
+    }),
+
+    uploadAvatar: build.mutation<PublicUserDto, { id: string; file: File }>({
+      query: ({ id, file }) => {
+        const formData = new FormData();
+        formData.append("avatar", file);
+        return {
+          url: `/users/${id}/avatar`,
+          method: "POST",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["CurrentUser"],
+    }),
   }),
 });
 
@@ -48,4 +74,6 @@ export const {
   useGetUserByIdQuery,
   useMeQuery,
   useLogoutUserMutation,
+  useUpdateUserMutation,
+  useUploadAvatarMutation,
 } = userApi;

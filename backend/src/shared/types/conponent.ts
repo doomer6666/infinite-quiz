@@ -13,4 +13,7 @@ export const Component = {
   PathTransformer: Symbol.for("PathTransformer"),
   GameRoomManager: Symbol.for("GameRoomManager"),
   GameGateway: Symbol.for("GameGateway"),
+  GameHistoryModel: Symbol.for("GameHistoryModel"),
+  GameHistoryService: Symbol.for("GameHistoryService"),
+  GameHistoryController: Symbol.for("GameHistoryController"),
 } as const;

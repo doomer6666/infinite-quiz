@@ -34,7 +34,6 @@ export const MyQuizCard = ({
   const onPublishQuiz = async () => {
     try {
       await publishQuiz(_id);
-      console.log(121331);
     } catch {
       /* empty */
     }
@@ -77,7 +76,10 @@ export const MyQuizCard = ({
               Опубликовать
             </button>
           ) : (
-            <button className="card-btn btn-run">
+            <button
+              className="card-btn btn-run"
+              onClick={() => nav(`${_id}/start`)}
+            >
               <MdPlayArrow size={13} color="white" /> Запустить
             </button>
           )}

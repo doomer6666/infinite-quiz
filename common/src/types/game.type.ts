@@ -44,6 +44,7 @@ export interface GameState {
   currentAnswers: PlayerAnswer[];
   timer: ReturnType<typeof setTimeout> | null;
   timerEndsAt: number | null;
+  createdAt?: Date;
 }
 
 export interface GameResults {

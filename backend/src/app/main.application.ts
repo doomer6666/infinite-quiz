@@ -31,6 +31,8 @@ export class MainApplication {
     @inject(Component.QuizController)
     private readonly quizController: IController,
     @inject(Component.GameGateway) private readonly gameGateway: GameGateway,
+    @inject(Component.GameHistoryController)
+    private readonly gameHistoryController: IController,
   ) {
     this.server = express();
     this.httpServer = http.createServer(this.server);
@@ -86,6 +88,7 @@ export class MainApplication {
   private async _intiControllers() {
     this.server.use("/users", this.userController.router);
     this.server.use("/quizzes", this.quizController.router);
+    this.server.use("/history", this.gameHistoryController.router);
   }
 
   private async _initMiddleware() {

@@ -1,22 +1,25 @@
 import { useGetUserByIdQuery } from "@/entities/user/index";
-import type { CtxType } from "@/shared/lib/hooks/useContextMenu";
 import type { QuizDto } from "@infinite-quiz/common";
-import {
-  MdQuestionAnswer,
-  MdStar,
-  MdPlayArrow,
-  MdMoreVert,
-} from "react-icons/md";
+import { MdQuestionAnswer, MdStar, MdPlayArrow } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 interface QuizCardProps {
   quiz: QuizDto;
-  onMenuClick: (e: React.MouseEvent, type: CtxType) => void;
 }
 
-export const QuizCard = ({ quiz, onMenuClick }: QuizCardProps) => {
-  const { imageFilename, category, questionCount, title, hostId, pointsCount } =
-    quiz;
+export const QuizCard = ({ quiz }: QuizCardProps) => {
+  const {
+    _id,
+    imageFilename,
+    category,
+    questionCount,
+    title,
+    hostId,
+    pointsCount,
+  } = quiz;
   const { data: author, isLoading, isError } = useGetUserByIdQuery(hostId);
+  const role = localStorage.getItem("gameRole");
+  const nav = useNavigate();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -32,12 +35,6 @@ export const QuizCard = ({ quiz, onMenuClick }: QuizCardProps) => {
         <div className="card-cover-badges">
           <span className="cover-badge cover-badge-cat">{category}</span>
         </div>
-        <button
-          className="cover-menu-btn"
-          onClick={(e) => onMenuClick(e, "other")}
-        >
-          <MdMoreVert size={15} />
-        </button>
         <div className="card-cover-bottom">
           <div className="cover-stat">
             <MdQuestionAnswer size={11} /> {questionCount} вопросов
@@ -59,7 +56,12 @@ export const QuizCard = ({ quiz, onMenuClick }: QuizCardProps) => {
           </div>
         </div>
         <div className="card-actions">
-          <button className="card-btn btn-run">
+          <button
+            className="card-btn btn-run"
+            onClick={() =>
+              role === "host" ? nav(`${_id}/start`) : nav("/join")
+            }
+          >
             <MdPlayArrow size={14} color="white" /> Играть
           </button>
         </div>
